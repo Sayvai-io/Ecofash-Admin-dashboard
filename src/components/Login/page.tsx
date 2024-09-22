@@ -16,7 +16,7 @@ import Blog from "../Dashboard/Blog";
 const Login: React.FC<{ setShowSignup: (show: boolean) => void }> = ({
   setShowSignup,
 }) => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +32,7 @@ const Login: React.FC<{ setShowSignup: (show: boolean) => void }> = ({
     e.preventDefault();
     setError(null);
     const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+      email: `${username}@example.com`, // Convert username to email format
       password,
     });
     if (error) {
@@ -61,10 +61,10 @@ const Login: React.FC<{ setShowSignup: (show: boolean) => void }> = ({
           <form onSubmit={handleSubmit} className="space-y-4">
             <TextField
               fullWidth
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              label="Username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
             <TextField
