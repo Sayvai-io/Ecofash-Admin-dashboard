@@ -1,20 +1,15 @@
-import Blog from "@/components/Dashboard/Blog";
-import { Metadata } from "next";
-import DefaultLayout from "@/components/Layouts/DefaultLaout";
-import React from "react";
+"use client";
 
-export const metadata: Metadata = {
-  title:
-    "Ecofash Dashboard",
-  description: "Ecofash admin dashboard",
-};
+import React from "react";
+import Login from "@/components/Login/page";
+import { useState } from 'react';
 
 export default function Home() {
+  const [showSignup, setShowSignup] = useState(false);
+
   return (
     <>
-      <DefaultLayout>
-        <Blog />
-      </DefaultLayout>
+      <Login setShowSignup={setShowSignup} />
     </>
   );
 }
