@@ -1,15 +1,12 @@
-// src/utils/supabaseClient.ts
-
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = "https://muizndhkpdgmcvyctfim.supabase.co";
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
-console.log(supabaseKey);
-const supabase = createClient(supabaseUrl, supabaseKey);
-export const logout = async () => {
-  await supabase.auth.signOut();
-  localStorage.removeItem("supabaseSession");
-  window.location.href = "/";
-};
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Supabase URL and Anon Key must be provided');
+}
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default supabase;
