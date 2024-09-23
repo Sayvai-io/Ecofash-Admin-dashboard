@@ -616,7 +616,7 @@ const Blog: React.FC = () => {
       }
 
       console.log('Image uploaded successfully, data:', data);
-      const { publicUrl } = supabase.storage
+      const { data:publicUrl } = supabase.storage
         .from('blog-images')
         .getPublicUrl(data.path);
 
