@@ -71,10 +71,15 @@ const BlogDetails = () => {
                   <li className="px-3 py-1 text-gray-700 hover:bg-gray-200 cursor-pointer flex">
                       <button
                         className="flex items-center"
-                        onClick={() => {
-                          setDropdownOpenIndex(null); // Close dropdown
-                          router.push(`/editblog/${blog.id}`); // Navigate to edit page with blog ID
-                          console.log('Navigating to edit blog with ID:', blog.id);
+                        onClick={async () => {
+                          try {
+                            setDropdownOpenIndex(null); // Close dropdown
+                            await router.push(`/editblog/${blog.id}`); // Navigate to edit page with blog ID
+                            console.log('Successfully navigated to edit blog with ID:', blog.id);
+                          } catch (error) {
+                            console.error('Error navigating to edit blog:', error);
+                            // Optionally, you can show an error message to the user here
+                          }
                         }}
                         
                       >

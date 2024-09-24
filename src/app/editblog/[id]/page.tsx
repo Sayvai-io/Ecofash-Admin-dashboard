@@ -11,8 +11,6 @@ const EditBlogpage = () => {
   return (
     <DefaultLayout>
       <div className="mx-auto w-full max-w-[970px]">
-       
-
         <EditBlog />
       </div>
     </DefaultLayout>
