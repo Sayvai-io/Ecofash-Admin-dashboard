@@ -43,13 +43,19 @@ const BlogDetails = () => {
         {blogs.map((blog, index) => ( // Add index parameter to map
           <div key={blog.id} className="flex p-4 border rounded-md bg-white shadow-md dark:bg-gray-dark dark:shadow-card"> {/* Flex container for each blog */}
             <div className="flex-shrink-0"> {/* Image container */}
-              <Image
-                src={blog.image_url} // Assuming your image URL is stored in this field
-                alt={blog.title}
-                width={150} // Set appropriate width
-                height={100} // Set appropriate height
-                className="rounded-md"
-              />
+              {blog.image_url ? (
+                <Image
+                  src={blog.image_url} // Assuming your image URL is stored in this field
+                  alt={blog.title}
+                  width={150} // Set appropriate width
+                  height={100} // Set appropriate height
+                  className="rounded-md"
+                />
+              ) : (
+                <div className="w-[150px] h-[100px] bg-gray-200 rounded-md flex items-center justify-center">
+                  <span className="text-gray-400">No Image</span>
+                </div>
+              )}
             </div>
             <div className="ml-4 flex-grow"> {/* Content container */}
               <h2 className="text-xl font-bold">{blog.title}</h2>
@@ -71,15 +77,10 @@ const BlogDetails = () => {
                   <li className="px-3 py-1 text-gray-700 hover:bg-gray-200 cursor-pointer flex">
                       <button
                         className="flex items-center"
-                        onClick={async () => {
-                          try {
-                            setDropdownOpenIndex(null); // Close dropdown
-                            await router.push(`/editblog/${blog.id}`); // Navigate to edit page with blog ID
-                            console.log('Successfully navigated to edit blog with ID:', blog.id);
-                          } catch (error) {
-                            console.error('Error navigating to edit blog:', error);
-                            // Optionally, you can show an error message to the user here
-                          }
+                        onClick={() => {
+                          setDropdownOpenIndex(null); // Close dropdown
+                          router.push(`/editblog/${blog.id}`); // Navigate to edit page with blog ID
+                          console.log('Navigating to edit blog with ID:', blog.id);
                         }}
                         
                       >
