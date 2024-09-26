@@ -8,7 +8,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-const EditContact: React.FC = () => {
+const EditContact: React.FC = ({contacts:any}) => {
   const router = useRouter(); // Initialize router
   const { id, title, subquotes, bg_image, email, contact_title, contact_content, contact_phone, email_title, email_content } = router.query; // Get query parameters
 
@@ -41,7 +41,7 @@ const EditContact: React.FC = () => {
         emailContent: email_content || '',
       });
     }
-  }, [id, title, subquotes, bg_image, email, contact_title, contact_content, contact_phone, email_title, email_content]);
+  }, [contactData]);
 
   const updateContactDetails = async () => {
     setIsLoading(true);
