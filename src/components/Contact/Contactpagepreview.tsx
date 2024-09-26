@@ -1,7 +1,19 @@
 import React, { useState } from "react";
 import { FaEllipsisV, FaEdit, FaTrash } from "react-icons/fa"; // Import icons
 
-const Contactpagepreview = ({ contacts = [], onDelete, onEdit }: { contacts?: any[], onDelete: (id: string) => void, onEdit: (contact: any) => void }) => { // Accept contacts prop and onDelete function
+type ContactPagePreviewProps = {
+    setIsEditContact: (isEdit: boolean) => void;
+    contacts?: any[];
+    onDelete: (id: string) => void;
+    onEdit: (contact: any) => void;
+  };
+  
+  const Contactpagepreview = ({ 
+    setIsEditContact, 
+    contacts = [], 
+    onDelete, 
+    onEdit 
+  }: ContactPagePreviewProps) => { // Accept contacts prop and onDelete function
     const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null); // State for dropdown
     const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
     const [contactToDelete, setContactToDelete] = useState<any>(null); // State for the contact to delete
@@ -46,6 +58,7 @@ const Contactpagepreview = ({ contacts = [], onDelete, onEdit }: { contacts?: an
                                         <button
                                             className="flex items-center"
                                             onClick={() => {
+                                                setIsEditContact(true)
                                                 setDropdownOpenIndex(null);
                                                 onEdit(contact); // Pass the contact to onEdit
                                             }}

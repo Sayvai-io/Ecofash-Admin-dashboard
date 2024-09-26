@@ -83,6 +83,7 @@ const ContactSection = () => {
                 <EditContact/> // Pass selected contact to EditContact
             ) : (
                 <Contactpagepreview 
+                    setIsEditContact={setIsEditContact}
                     contacts={contacts} 
                     onDelete={handleDelete} 
                     onEdit={handleEditContact} // Pass handleEditContact
