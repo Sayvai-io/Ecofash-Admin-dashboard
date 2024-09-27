@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import Image from 'next/image';
 
-const About_ReviewForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => { // Accept onSubmit prop
+const About_ReviewForm = ({ onSubmit, onBack }: { onSubmit: (data: any) => void; onBack: () => void; }) => { // Accept onBack prop
     const [formData, setFormData] = useState({
         name: "",               // Changed field
         designation: "",        // Changed field
@@ -8,10 +11,24 @@ const About_ReviewForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => { 
         comments: "",           // Changed field
         rating: "",             // Changed field
     });
+    const [imagePreview, setImagePreview] = useState<string | null>(null); // State for image preview
+    const fileInputRef = React.useRef<HTMLInputElement | null>(null); // Ref for file input
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string); // Set image preview
+                setFormData({ ...formData, profile_image: reader.result as string }); // Update formData with image
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -19,10 +36,18 @@ const About_ReviewForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => { 
         console.log("Review Form Data Submitted:", formData);
         onSubmit(formData); // Call the onSubmit prop with form data
     };
-
+    const handleBack = () => {
+        onBack(); // Call the onBack prop
+    };
+    
     return (
+        <>
+       <button onClick={handleBack} className="top-4 left-4 flex items-center w-20 px-4 py-2 bg-gray-500 text-white rounded"> {/* Back button */}
+        <FontAwesomeIcon icon={faArrowLeft} className="mr-2" /> {/* Left arrow icon */}
+        Back
+      </button>
         <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-4 border rounded-md shadow-md">
-            <h2 className="text-xl font-bold mb-4">Review Form</h2> {/* Updated heading */}
+            <h2 className="text-xl font-bold mb-4">AddReview</h2> {/* Updated heading */}
             <div className="mb-4">
                 <label className="block mb-1" htmlFor="name">Name</label>
                 <input
@@ -47,15 +72,28 @@ const About_ReviewForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => { 
                 />
             </div>
             <div className="mb-4">
-                <label className="block mb-1" htmlFor="profile_image">Profile Image URL</label>
+                <label htmlFor="blog-image" className="block mb-2">Profile Image</label>
                 <input
-                    type="text"
-                    name="profile_image"
-                    id="profile_image"
-                    value={formData.profile_image}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
+                    type="file"
+                    id="blog-image"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    ref={fileInputRef}
+                    className="hidden"
+                    required
                 />
+                <button 
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-4 py-2 bg-blue-500 text-white rounded"
+                >
+                    Choose Image
+                </button>
+                {imagePreview && (
+                    <div className="mt-2">
+                        <Image src={imagePreview} alt="Preview" className="max-w-xs" width={500} height={300} layout="responsive" />
+                    </div>
+                )}
             </div>
             <div className="mb-4">
                 <label className="block mb-1" htmlFor="comments">Comments</label>
@@ -80,9 +118,10 @@ const About_ReviewForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => { 
                 />
             </div>
             <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200">
-                Submit
+                Upload
             </button>
         </form>
+        </>
     );
 };
 

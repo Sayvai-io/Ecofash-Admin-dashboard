@@ -1,18 +1,16 @@
-
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import supabase from "@/utils/supabaseClient";
-import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
-
+import { FaEllipsisV, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 
 type ReviewPagePreview = {
   setIsEditReview: (isEdit: boolean) => void;
-  setReviewId: (isReview:any)=>void;
+  setReviewId: (isReview: any) => void;
   reviewData?: any[];
   onDelete: (id: string) => void;
   onEdit: (contact: any) => void;
+  onAddReviewToggle: () => void;
 };
 
 const About_ReviewPagePreview = ({ 
@@ -20,13 +18,15 @@ const About_ReviewPagePreview = ({
   setReviewId,
   reviewData,
   onDelete,
-  onEdit
+  onEdit,
+  onAddReviewToggle // Pass the toggle function
 }: ReviewPagePreview) => {
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null);
+  const [isAddReviewOpen, setIsAddReviewOpen] = useState(false); // State to manage Add Review form visibility
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -61,12 +61,30 @@ const About_ReviewPagePreview = ({
     }
   };
 
+
+
+  const handleAddReviewSubmit = (newReview: any) => {
+    setReviews([...reviews, newReview]); // Add the new review to the list
+    setIsAddReviewOpen(false); // Close the Add Review form
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
     <>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Reviews</h1>
+        <button 
+          className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200"
+          onClick={onAddReviewToggle} // Use the passed toggle function
+        >
+          <FaPlus className="mr-2" /> Add Review
+        </button>
+      </div>
+
+    
       <div className="grid gap-4">
         {reviews.map((review, index) => (
           <div key={review.id} className="flex p-4 border rounded-md bg-white shadow-md dark:bg-gray-dark dark:shadow-card">
@@ -102,8 +120,8 @@ const About_ReviewPagePreview = ({
                       className="flex items-center"
                       onClick={() => {
                         setDropdownOpenIndex(null);
-                        setReviewId(review.id)
-                        setIsEditReview(true)
+                        setReviewId(review.id);
+                        setIsEditReview(true);
                       }}
                     >
                       <FaEdit className="mr-2" /> <span>Edit</span>

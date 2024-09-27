@@ -18,6 +18,8 @@ const About_ReviewSection = () => {
     const [isEditReview, setIsEditReview] = useState(false); // State for EditReview visibility
     const [selectedReview, setSelectedReview] = useState<any | null>(null); // State to hold the selected review for editing
     const [reviewId,setReviewId]=useState();
+    const [showReviewForm, setShowReviewForm] = useState(false); // Add this line to define the state
+    const [isAddReviewOpen, setIsAddReviewOpen] = useState(false); // Move this state here
 
     useEffect(() => {
         const fetchReviewData = async () => {
@@ -42,7 +44,7 @@ const About_ReviewSection = () => {
 
     const handleReviewFormSubmit = async (formData: any) => {
         const { error } = await supabase
-            .from("reviews") // Insert into the 'reviews' table
+            .from("about_review") // Ensure this matches your table name
             .insert([formData]); // Insert the new review data
 
         if (error) {
@@ -51,6 +53,7 @@ const About_ReviewSection = () => {
         } else {
             setReviewData([...reviewData, formData]); // Update review data state
             setIsReviewEmpty(false); // Show review preview after adding
+            setIsAddReviewOpen(false); // Close the Add Review form
         }
     };
 
@@ -68,6 +71,18 @@ const About_ReviewSection = () => {
         setSelectedReview(null); // Clear selected review
     };
 
+    const handleAddReviewToggle = () => {
+        setIsAddReviewOpen(prev => !prev); // Toggle the Add Review form
+        if (isAddReviewOpen) {
+            setIsEditReview(false); // Close edit mode if opening add review
+        }
+    };
+
+    const handleBack = () => {
+        setIsAddReviewOpen(false); // Close Add Review form
+        setIsEditReview(false); // Ensure Edit mode is closed
+    };
+
     if (loading) {
         return <div>Loading...</div>; // Loading state
     }
@@ -78,13 +93,17 @@ const About_ReviewSection = () => {
 
     return (
         <div>
-            {reviewData.length === 0 ? (
-                <About_ReviewForm onSubmit={handleReviewFormSubmit} /> // Show AboutForm if no review data
+            {isAddReviewOpen ? (
+                <About_ReviewForm 
+                    onSubmit={handleReviewFormSubmit} 
+                    onBack={handleBack} // Pass the handleBack function
+                />
             ) : isEditReview ? (
                 <EditAbout_ReviewPage 
-                setIsEditReview={setIsEditReview}
-                reviewId={reviewId}
-                reviewData={reviewData}/> // Ensure EditAboutPage accepts 'reviewData' prop
+                    setIsEditReview={setIsEditReview}
+                    reviewId={reviewId}
+                    reviewData={reviewData} // Ensure EditAboutPage accepts 'reviewData' prop
+                />
             ) : (
                 <About_ReviewPagePreview 
                     setIsEditReview={setIsEditReview}
@@ -92,6 +111,7 @@ const About_ReviewSection = () => {
                     reviewData={reviewData} 
                     onDelete={handleDeleteReview} 
                     onEdit={handleEditReview} // Pass handleEditReview
+                    onAddReviewToggle={handleAddReviewToggle} // Pass the toggle function
                 />
             )}
         </div>
