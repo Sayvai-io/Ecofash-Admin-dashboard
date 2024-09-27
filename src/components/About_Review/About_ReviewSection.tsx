@@ -17,6 +17,7 @@ const About_ReviewSection = () => {
     const [isReviewEmpty, setIsReviewEmpty] = useState(false); // Changed state name
     const [isEditReview, setIsEditReview] = useState(false); // State for EditReview visibility
     const [selectedReview, setSelectedReview] = useState<any | null>(null); // State to hold the selected review for editing
+    const [reviewId,setReviewId]=useState();
 
     useEffect(() => {
         const fetchReviewData = async () => {
@@ -82,13 +83,15 @@ const About_ReviewSection = () => {
             ) : isEditReview ? (
                 <EditAbout_ReviewPage 
                 setIsEditReview={setIsEditReview}
+                reviewId={reviewId}
                 reviewData={reviewData}/> // Ensure EditAboutPage accepts 'reviewData' prop
             ) : (
                 <About_ReviewPagePreview 
                     setIsEditReview={setIsEditReview}
+                    setReviewId={setReviewId}
                     reviewData={reviewData} 
-                    onDeleteReview={handleDeleteReview} 
-                    onEditReview={handleEditReview} // Pass handleEditReview
+                    onDelete={handleDeleteReview} 
+                    onEdit={handleEditReview} // Pass handleEditReview
                 />
             )}
         </div>

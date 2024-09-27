@@ -6,8 +6,22 @@ import supabase from "@/utils/supabaseClient";
 import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 
-const About_ReviewPagePreview = () => {
-  const router = useRouter();
+
+type ReviewPagePreview = {
+  setIsEditReview: (isEdit: boolean) => void;
+  setReviewId: (isReview:any)=>void;
+  reviewData?: any[];
+  onDelete: (id: string) => void;
+  onEdit: (contact: any) => void;
+};
+
+const About_ReviewPagePreview = ({ 
+  setIsEditReview,
+  setReviewId,
+  reviewData,
+  onDelete,
+  onEdit
+}: ReviewPagePreview) => {
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null);
@@ -88,7 +102,8 @@ const About_ReviewPagePreview = () => {
                       className="flex items-center"
                       onClick={() => {
                         setDropdownOpenIndex(null);
-                        router.push(`/editreview/${review.id}`); // Adjust the route for editing
+                        setReviewId(review.id)
+                        setIsEditReview(true)
                       }}
                     >
                       <FaEdit className="mr-2" /> <span>Edit</span>
