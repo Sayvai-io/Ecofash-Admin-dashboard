@@ -80,7 +80,11 @@ const ContactSection = () => {
             {contacts.length === 0 ? (
                 <ContactForm onSubmit={handleFormSubmit} /> // Show ContactForm if no contacts
             ) : isEditContact ? (
-                <EditContact contacts={contacts}/> // Pass selected contact to EditContact
+                <EditContact 
+                
+                setIsEditContact={setIsEditContact}
+                contacts={contacts}
+                /> // Ensure EditContact accepts 'contacts' prop
             ) : (
                 <Contactpagepreview 
                     setIsEditContact={setIsEditContact}
