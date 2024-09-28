@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { FaEllipsisV, FaEdit, FaTrash } from "react-icons/fa"; // Import icons
+import Image from 'next/image'; // Import Image for displaying images
 
 type AboutPagePreviewProps = {
     setIsEditAbout: (isEdit: boolean) => void; // Changed function name
+    setAboutData: (data: any) => void; // Function to update the about data in the parent component
     aboutData?: any[]; // Changed prop name
     onDelete: (id: string) => void; // Changed function name
     onEdit: (about: any) => void; // Changed function name
@@ -10,6 +12,7 @@ type AboutPagePreviewProps = {
   
   const AboutPagePreview = ({ 
     setIsEditAbout, 
+    setAboutData,
     aboutData = [], // Changed prop name
     onDelete, 
     onEdit 
@@ -33,19 +36,51 @@ type AboutPagePreviewProps = {
                 aboutData.map((about, index) => (
                     <div key={index} className="mb-4 p-4 border-b relative"> {/* Add bottom margin and padding */}
                         <h3 className="text-lg font-semibold mb-2">{about.title}</h3> {/* Title */}
-                        <p className="text-gray-500 mb-1">{about.bg_image}</p> {/* Background image */}
+                        {about.bg_image && ( // Display About image if it exists
+                            <Image 
+                                src={about.bg_image} 
+                                alt="Background Image" 
+                                width={150} 
+                                height={100} 
+                                className="rounded-md mb-2" 
+                            />
+                        )}
                         <p className="text-gray-700 mb-1">{about.about_title}</p> {/* About title */}
                         <p className="text-gray-700 mb-1">{about.about_heading}</p> {/* About heading */}
                         <p className="text-gray-700 mb-1">{about.about_content}</p> {/* About content */}
-                        <p className="text-gray-500 mb-1">{about.about_image}</p> {/* About image */}
+                        {about.about_image && ( // Display About image if it exists
+                            <Image 
+                                src={about.about_image} 
+                                alt="About Image" 
+                                width={150} 
+                                height={100} 
+                                className="rounded-md mb-2" 
+                            />
+                        )}
                         <p className="text-gray-700 mb-1">{about.mv_title}</p> {/* MV title */}
                         <p className="text-gray-700 mb-1">{about.mv_heading}</p> {/* MV heading */}
                         <p className="text-gray-700 mb-1">{about.mv_content}</p> {/* MV content */}
-                        <p className="text-gray-500 mb-1">{about.mv_image}</p> {/* MV image */}
+                        {about.mv_image && ( // Display MV image if it exists
+                            <Image 
+                                src={about.mv_image} 
+                                alt="MV Image" 
+                                width={150} 
+                                height={100} 
+                                className="rounded-md mb-2" 
+                            />
+                        )}
                         <p className="text-gray-700 mb-1">{about.tc_title}</p> {/* TC title */}
                         <p className="text-gray-700 mb-1">{about.tc_heading}</p> {/* TC heading */}
                         <p className="text-gray-700 mb-1">{about.tc_content}</p> {/* TC content */}
-                        <p className="text-gray-500 mb-1">{about.tc_image}</p> {/* TC image */}
+                        {about.tc_image && ( // Display TC image if it exists
+                            <Image 
+                                src={about.tc_image} 
+                                alt="TC Image" 
+                                width={150} 
+                                height={100} 
+                                className="rounded-md mb-2" 
+                            />
+                        )}
                         <p className="text-gray-700 mb-1">{about.review_heading}</p> {/* Review heading */}
 
                         {/* Dropdown Button */}

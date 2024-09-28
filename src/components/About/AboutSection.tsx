@@ -82,7 +82,8 @@ const AboutSection = () => {
             ) : isEditAbout ? (
                 <EditAboutPage 
                 setIsEditAbout={setIsEditAbout}
-                aboutData={aboutData}/> // Ensure EditAboutPage accepts 'aboutData' prop
+                setAboutData={setAboutData} // Pass the setAboutData function
+                />
             ) : (
                 <AboutPagePreview 
                     setIsEditAbout={setIsEditAbout}
