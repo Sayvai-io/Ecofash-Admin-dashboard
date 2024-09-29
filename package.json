@@ -17,6 +17,7 @@
     "@mui/material": "^6.1.1",
     "@supabase/supabase-js": "^2.45.4",
     "apexcharts": "^3.45.2",
+    "dompurify": "^3.1.7",
     "flatpickr": "^4.6.13",
     "jsvectormap": "^1.5.3",
     "next": "^14.2.13",

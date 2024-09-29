@@ -15,6 +15,8 @@ type AboutPagePreviewProps = {
   setAboutData: (data: any) => void; // Function to update the about data in the parent component
 };
 
+
+
 const EditAboutPage = ({ 
   setIsEditAbout, 
   setAboutData 
