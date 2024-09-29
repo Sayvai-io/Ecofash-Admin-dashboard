@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js';
 import ContactForm from "./ContactForm"; // Updated import
 import EditContact from "./EditContact"; // Updated import
-import ContactPagePreview from "./ContactPagePreview"; // Ensure this path is correct
+import Contact_PagePreview from "./Contact_PagePreview"; // Ensure this path is correct
 
 
 const supabase = createClient(
@@ -87,7 +87,7 @@ const ContactSection = () => { // Updated component name
                 setContactData={setContactData} // Updated prop
                 />
             ) : (
-                <ContactPagePreview
+                <Contact_PagePreview
                     setIsEditContact={setIsEditContact}
                     contactData={contactData} // Updated prop
                     onDelete={handleDeleteContact} // Updated prop
