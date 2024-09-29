@@ -101,8 +101,8 @@ const Service_ProvidedSection = () => {
             ) : isEditService ? (
                 <EditService_ProvidedPage 
                     setIsEditService={setIsEditService}
-                    serviceId={serviceId}
-                    serviceData={serviceData} // Ensure EditServiceProvidedPage accepts 'serviceData' prop
+                    serviceId={serviceId || ''} // Ensure serviceId is a string or an empty string if undefined
+                    setServiceData={(data) => setServiceData(data)}// Ensure EditServiceProvidedPage accepts 'setServiceData' prop
                 />
             ) : (
                 <Service_ProvidedPagePreview 

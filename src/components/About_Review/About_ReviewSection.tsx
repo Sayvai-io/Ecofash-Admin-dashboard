@@ -101,8 +101,8 @@ const About_ReviewSection = () => {
             ) : isEditReview ? (
                 <EditAbout_ReviewPage 
                     setIsEditReview={setIsEditReview}
-                    reviewId={reviewId}
-                    reviewData={reviewData} // Ensure EditAboutPage accepts 'reviewData' prop
+                    reviewId={reviewId || ''} // Ensure reviewId is a string, even if undefined
+                    setReviewData={(data) => setReviewData(data)} // Correctly pass the setReviewData function
                 />
             ) : (
                 <About_ReviewPagePreview 
