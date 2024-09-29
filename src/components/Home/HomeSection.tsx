@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js';
-import HomeForm from "./HomeForm";
-import HomePagePreview from "./HomePagePreview";
-import EditHomePage from "./EditHomePage";
+import HomeForm from "./HomeForm"; // Updated import
+import HomePagePreview from "./HomePagePreview"; // Updated import
+import EditHomePage from "./EditHomePage"; // Updated import
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,59 +11,60 @@ const supabase = createClient(
 );
 
 const HomeSection = () => {
-    const [homeData, setHomeData] = useState<any[]>([]); // Changed from contacts to homeData
+    const [homeData, setHomeData] = useState<any[]>([]); // Updated state name
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState<string | null>(null); // State to hold error messages
-    const [isHomeEmpty, setIsHomeEmpty] = useState(false); // Changed from isContact to isHomeEmpty
-    const [isEditHome, setIsEditHome] = useState(false); // Changed from isEditContact to isEditHome
-    const [selectedHome, setSelectedHome] = useState<any | null>(null); // Changed from selectedContact to selectedHome
+    const [isHomeEmpty, setIsHomeEmpty] = useState(false); // Updated state name
+    const [isEditHome, setIsEditHome] = useState(false); // Updated state name
+    const [selectedHome, setSelectedHome] = useState<any | null>(null); // Updated state name
 
     useEffect(() => {
-        const fetchHomeData = async () => { // Changed from fetchContacts to fetchHomeData
+        const fetchHomeData = async () => { // Updated function name
             setLoading(true); // Set loading to true before fetching
             const { data, error } = await supabase
-                .from("home") // Changed from "contact" to "home"
+                .from("home") // Fetch from the 'home' table
                 .select("*"); // Fetch all columns
 
             if (error) {
-                console.error("Error fetching home data:", error);
-                setError("Failed to fetch home data."); // Set error message
+                console.error("Error fetching home data:", error); // Updated log message
+                setError("Failed to fetch home data."); // Updated error message
             } else {
-                console.log("Fetched home data:", data); // Log the fetched data to the console
+                console.log("Fetched home data:", data); // Updated log message
                 setHomeData(data); // Set the fetched data to state
             }
             setLoading(false); 
             data?.length === 0 ? setIsHomeEmpty(true) : setIsHomeEmpty(false); // Determine if to show form or preview
         };
 
-        fetchHomeData(); // Call the fetch function
+        fetchHomeData();
     }, []); // Empty dependency array means this runs once on mount
 
-    const handleFormSubmit = async (formData: any) => {
+    const handleHomeFormSubmit = async (formData: any) => { // Updated function name
         const { error } = await supabase
-            .from("home") // Changed from "contact" to "home"
+            .from("home") // Insert into the 'home' table
             .insert([formData]); // Insert the new home data
 
         if (error) {
-            console.error("Error adding home data:", error);
-            setError("Failed to add home data."); // Set error message
+            console.error("Error adding home data:", error); // Updated log message
+            setError("Failed to add home data."); // Updated error message
         } else {
-            setHomeData([...homeData, formData]); // Update homeData state
+            setHomeData([...homeData, formData]); // Update home data state
             setIsHomeEmpty(false); // Show home preview after adding
         }
     };
 
-    const handleDelete = (id: string) => {
+    const handleDeleteHome = (id: string) => { // Updated function name
         // Logic to delete the home data by id
     };
 
-    const handleEditHome = (home: any) => { // Changed from handleEditContact to handleEditHome
+    const handleEditHome = (home: any) => { // Updated function name
         setSelectedHome(home); // Set the selected home for editing
-        setIsEditHome(true); // Show EditHomePage
+        setIsEditHome(true); // Show EditHome
+        setHomeData((prevData) => prevData.map((item) => item.id === home.id ? home : item)); // Update local state if needed
     };
 
-    const handleSave = () => {
-        setIsEditHome(false); // Hide EditHomePage and show preview
+    const handleSaveHome = () => { // Updated function name
+        setIsEditHome(false); // Hide EditHome and show preview
         setSelectedHome(null); // Clear selected home
     };
 
@@ -78,16 +79,18 @@ const HomeSection = () => {
     return (
         <div>
             {homeData.length === 0 ? (
-                <HomeForm onSubmit={handleFormSubmit} /> // Show HomeForm if no home data
+                <HomeForm onSubmit={handleHomeFormSubmit} /> // Show HomeForm if no home data
             ) : isEditHome ? (
                 <EditHomePage 
                 setIsEditHome={setIsEditHome}
-                homeData={homeData}/> // Ensure EditHomePage accepts 'homeData' prop
+                setHomeData={setHomeData} // Pass the setHomeData function
+                />
             ) : (
                 <HomePagePreview 
-                    setIsEditHome={setIsEditHome} // Changed from setIsEditContact to setIsEditHome
-                    homeData={homeData} // Changed from contacts to homeData
-                    onDelete={handleDelete} 
+                    setIsEditHome={setIsEditHome}
+                    homeData={homeData} 
+                    onDelete={handleDeleteHome} 
+                    setHomeData={setHomeData}
                     onEdit={handleEditHome} // Pass handleEditHome
                 />
             )}
@@ -95,4 +98,4 @@ const HomeSection = () => {
     );
 }
 
-export default HomeSection;
+export default HomeSection; // Updated export

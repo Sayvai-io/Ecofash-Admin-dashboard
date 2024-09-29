@@ -60,6 +60,7 @@ const AboutSection = () => {
     const handleEditAbout = (about: any) => {
         setSelectedAbout(about); // Set the selected about for editing
         setIsEditAbout(true); // Show EditAbout
+        setAboutData((prevData) => prevData.map((item) => item.id === about.id ? about : item)); // Update local state if needed
     };
 
     const handleSaveAbout = () => {
@@ -89,6 +90,7 @@ const AboutSection = () => {
                     setIsEditAbout={setIsEditAbout}
                     aboutData={aboutData} 
                     onDelete={handleDeleteAbout} 
+                    setAboutData={setAboutData}
                     onEdit={handleEditAbout} // Pass handleEditAbout
                 />
             )}

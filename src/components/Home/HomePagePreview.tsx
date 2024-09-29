@@ -1,22 +1,25 @@
 import React, { useState } from "react";
 import { FaEllipsisV, FaEdit, FaTrash } from "react-icons/fa"; // Import icons
+import Image from 'next/image'; // Import Image for displaying images
 
-type HomePagePreviewProps = {
-    setIsEditHome: (isEdit: boolean) => void; // Changed from setIsEditContact to setIsEditHome
-    homeData?: any[]; // Changed from contacts to homeData
-    onDelete: (id: string) => void;
-    onEdit: (home: any) => void; // Changed from contact to home
+type HomePagePreviewProps = { // Updated type name
+    setIsEditHome: (isEdit: boolean) => void; // Changed function name
+    setHomeData: (data: any) => void; // Function to update the home data in the parent component
+    homeData?: any[]; // Changed prop name
+    onDelete: (id: string) => void; // Changed function name
+    onEdit: (home: any) => void; // Changed function name
 };
 
-const HomePagePreview = ({ 
+const HomePagePreview = ({     
     setIsEditHome, 
-    homeData = [], // Changed from contacts to homeData
+    setHomeData,
+    homeData = [], // Changed prop name
     onDelete, 
     onEdit 
-}: HomePagePreviewProps) => { // Accept homeData prop and onDelete function
+}: HomePagePreviewProps) => { // Updated props
     const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null); // State for dropdown
     const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
-    const [homeToDelete, setHomeToDelete] = useState<any>(null); // Changed from contactToDelete to homeToDelete
+    const [homeToDelete, setHomeToDelete] = useState<any>(null); // State for the home to delete
 
     const handleDelete = () => {
         if (homeToDelete) {
@@ -25,44 +28,90 @@ const HomePagePreview = ({
         }
     };
 
+    const handleEdit = (home: any) => {
+        setIsEditHome(true); // Show edit form
+        setHomeData(home); // Pass the selected home data for editing
+    };
+
     return (
-        <div className="max-w-2xl mx-auto p-4 border rounded-md shadow-md pb-6"> {/* Increased width */}
+        <div className="max-w-5xl mx-auto pb-6 mt-2 bg-white border rounded-lg shadow-lg p-10 "> {/* Adjusted mt-20 for margin-top */}
             {homeData.length === 0 ? (
                 <p>No home data available.</p> // Message if no home data
             ) : (
-                homeData.map((home, index) => ( // Changed from contact to home
-                    <div key={index} className="mb-4 p-4 border-b relative"> {/* Add bottom margin and padding */}
-                        <h3 className="text-lg font-semibold mb-2">{home.heading}</h3> {/* Changed from contact.title to home.heading */}
-                        <p className="text-gray-700 mb-1">{home.head_content}</p> {/* Changed from contact.subquotes to home.head_content */}
-                        <p className="text-gray-500 mb-1">{home.head_image}</p> {/* Changed from contact.bg_image to home.head_image */}
-                        <p className="text-gray-700 mb-1">{home.email}</p> {/* Changed from contact.email to home.email */}
-                        <p className="text-gray-700 mb-1">{home.contact_heading}</p> {/* Changed from contact.contact_title to home.contact_heading */}
-                        <p className="text-gray-700 mb-1">{home.contact_content}</p> {/* Changed from contact.contact_content to home.contact_content */}
-                        <p className="text-gray-700 mb-1">{home.contact_image}</p> {/* Changed from contact.contact_phone to home.contact_image */}
-                        <p className="text-gray-700 mb-1">{home.about_title}</p> {/* Added about_title */}
-                        <p className="text-gray-700 mb-1">{home.about_heading}</p> {/* Added about_heading */}
-                        <p className="text-gray-700 mb-1">{home.about_content}</p> {/* Added about_content */}
-                        <p className="text-gray-700 mb-1">{home.about_image}</p> {/* Added about_image */}
-                        <p className="text-gray-700 mb-1">{home.service}</p> {/* Added service */}
+                homeData.map((home, index) => (
+                    <>
+                     <div className="border-b mb-4"> {/* Added border-bottom class */}
+                        <h1 className="text-2xl text-gray-700 font-bold mb-5">Home Page Preview</h1> {/* Updated heading */}
+                    </div>
+                    <div key={index} className="mb-4 p-4 border-b flex justify-between items-start gap-10"> {/* Added gap-4 for spacing */}
+                        
+                        <div className="flex-1"> {/* Allow title and content to take available space */}
+                            <h3 className="text-xl text-gray-700 font-semibold mb-4">{home.heading}</h3> {/* Heading */}
+                            <h3 className="text-xl text-gray-700 font-semibold mb-4">{home.head_content}</h3> {/* Heading */}
+                            {home.head_image && ( // Display Head image if it exists
+                                <Image 
+                                    src={home.head_image} 
+                                    alt="Head Image" 
+                                    width={300}  
+                                    height={200} 
+                                    className="rounded-md mb-4" 
+                                />
+                            )}
+                            <p className="text-gray-700 text-lg mb-1">{home.about_title}</p> {/* About title */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2">{home.about_heading}</p> {/* About heading */}
+                            <p className="text-gray-700 mr-50 mb-4">{home.about_content}</p> {/* About content */}
+                            {home.about_image && ( // Display About image if it exists
+                                <Image 
+                                    src={home.about_image} 
+                                    alt="About Image" 
+                                    width={300}  
+                                    height={200} 
+                                    className="rounded-md mb-4" 
+                                />
+                            )}
+                            {home.services_image && ( // Display Ser   vices image if it exists
+                                <Image 
+                                    src={home.services_image} 
+                                    alt="Services Image" 
+                                    width={300}  
+                                    height={200} 
+                                    className="rounded-md mb-4" 
+                                />
+                            )}
+                            <p className="text-gray-700 mb-1">{home.contact_heading}</p> {/* Contact heading */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2">{home.contact_content}</p> {/* Contact content */}
+                            {home.contact_image && ( // Display Contact image if it exists
+                                <Image 
+                                    src={home.contact_image} 
+                                    alt="Contact Image" 
+                                    width={300}  
+                                    height={200} 
+                                    className="rounded-md mb-4" 
+                                />
+                            )}
+                        </div>
 
                         {/* Dropdown Button */}
-                        <div className="absolute top-2 right-2">
+                        <div className="flex flex-col items-end"> {/* Align dropdown button to the right */}
                             <button 
                                 className="text-gray-500 hover:text-gray-700 focus:outline-none hover:bg-gray-200 rounded-md p-2" 
-                                onClick={() => setDropdownOpenIndex(dropdownOpenIndex === index ? null : index)}
+                                onClick={(e) => {
+                                    // Toggle dropdown without preventing scroll
+                                    setDropdownOpenIndex(dropdownOpenIndex === index ? null : index);
+                                }}
                             >
                                 <FaEllipsisV className="h-3 w-3" />
                             </button>
                             {/* Dropdown Menu */}
-                            <div className={`absolute right-0 mt-2 w-34 bg-gray-100 border rounded-md shadow-lg z-10 ${dropdownOpenIndex === index ? 'block' : 'hidden'}`}>
+                            <div className={`mt-2 w-34 bg-gray-100 border rounded-md shadow-lg z-10 ${dropdownOpenIndex === index ? 'block' : 'hidden'}`}>
                                 <ul className="py-1">
                                     <li className="px-3 py-1 text-gray-700 hover:bg-gray-200 cursor-pointer flex">
                                         <button
                                             className="flex items-center"
                                             onClick={() => {
-                                                setIsEditHome(true); // Changed from setIsEditContact to setIsEditHome
+                                                setIsEditHome(true); // Changed function call
                                                 setDropdownOpenIndex(null);
-                                                onEdit(home); // Pass the home to onEdit
+                                                onEdit(home); // Changed function call
                                             }}
                                         >
                                             <FaEdit className="mr-2" /> <span>Edit</span>
@@ -71,7 +120,7 @@ const HomePagePreview = ({
                                     <li className="px-3 py-2 text-gray-700 hover:text-red-500 hover:bg-gray-200 cursor-pointer flex"
                                         onClick={() => {
                                             setDropdownOpenIndex(null);
-                                            setHomeToDelete(home); // Set the home to delete
+                                            setHomeToDelete(home); // Changed variable name
                                             setIsModalOpen(true); // Open the modal
                                         }}
                                     >
@@ -81,6 +130,7 @@ const HomePagePreview = ({
                             </div>
                         </div>
                     </div>
+                   </> 
                 ))
             )}
 
@@ -101,4 +151,4 @@ const HomePagePreview = ({
     );
 };
 
-export default HomePagePreview;
+export default HomePagePreview; // Updated export

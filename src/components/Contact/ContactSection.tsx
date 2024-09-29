@@ -1,100 +1,102 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js';
-import ContactForm from "./ContactForm";
-import Contactpagepreview from "./Contactpagepreview";
-import EditContact from "./EditContact"; // Assuming EditContact is imported from somewhere
+import ContactForm from "./ContactForm"; // Updated import
+import EditContact from "./EditContact"; // Updated import
+import ContactPagePreview from "./ContactPagePreview";
+
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-const ContactSection = () => {
-    const [contacts, setContacts] = useState<any[]>([]); // State to hold contact data
-    const [loading, setLoading] = useState(true); // Loading state
-    const [error, setError] = useState<string | null>(null); // State to hold error messages
-    const [isContact, setIsContact] = useState(false);
-    const [isEditContact, setIsEditContact] = useState(false); // State for EditContact visibility
-    const [selectedContact, setSelectedContact] = useState<any | null>(null); // State to hold the selected contact for editing
+const ContactSection = () => { // Updated component name
+    const [contactData, setContactData] = useState<any[]>([]); // Updated state name
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [isContactEmpty, setIsContactEmpty] = useState(false); // Updated state name
+    const [isEditContact, setIsEditContact] = useState(false); // Updated state name
+    const [selectedContact, setSelectedContact] = useState<any | null>(null); // Updated state name
 
     useEffect(() => {
-        const fetchContacts = async () => {
-            setLoading(true); // Set loading to true before fetching
+        const fetchContactData = async () => { // Updated function name
+            setLoading(true);
             const { data, error } = await supabase
-                .from("contact") // Replace with your table name
-                .select("*"); // Fetch all columns
+                .from("contact") // Updated table name
+                .select("*");
 
             if (error) {
-                console.error("Error fetching contacts:", error);
-                setError("Failed to fetch contacts."); // Set error message
+                console.error("Error fetching contact data:", error); // Updated log message
+                setError("Failed to fetch contact data."); // Updated error message
             } else {
-                console.log("Fetched contacts:", data); // Log the fetched data to the console
-                setContacts(data); // Set the fetched data to state
+                console.log("Fetched contact data:", data); // Updated log message
+                setContactData(data); // Updated state
             }
-            setLoading(false); 
-            data?.length === 0 ? setIsContact(true) : setIsContact(false); // Determine if to show form or preview
+            setLoading(false);
+            data?.length === 0 ? setIsContactEmpty(true) : setIsContactEmpty(false); // Updated condition
         };
 
-        fetchContacts();
-    }, []); // Empty dependency array means this runs once on mount
+        fetchContactData();
+    }, []);
 
-    const handleFormSubmit = async (formData: any) => {
+    const handleContactFormSubmit = async (formData: any) => { // Updated function name
         const { error } = await supabase
-            .from("contact") // Replace with your table name
-            .insert([formData]); // Insert the new contact data
+            .from("contact") // Updated table name
+            .insert([formData]);
 
         if (error) {
-            console.error("Error adding contact:", error);
-            setError("Failed to add contact."); // Set error message
+            console.error("Error adding contact data:", error); // Updated log message
+            setError("Failed to add contact data."); // Updated error message
         } else {
-            setContacts([...contacts, formData]); // Update contacts state
-            setIsContact(false); // Show contact preview after adding
+            setContactData([...contactData, formData]); // Updated state
+            setIsContactEmpty(false); // Updated state
         }
     };
 
-    const handleDelete = (id: string) => {
-        // Logic to delete the contact by id
+    const handleDeleteContact = (id: string) => { // Updated function name
+        // Logic to delete the contact data by id
     };
 
-    const handleEditContact = (contact: any) => {
-        setSelectedContact(contact); // Set the selected contact for editing
-        setIsEditContact(true); // Show EditContact
+    const handleEditContact = (contact: any) => { // Updated function name
+        setSelectedContact(contact); // Updated state name
+        setIsEditContact(true); // Updated state name
+        setContactData((prevData) => prevData.map((item) => item.id === contact.id ? contact : item)); // Updated state
     };
 
-    const handleSave = () => {
-        setIsEditContact(false); // Hide EditContact and show preview
-        setSelectedContact(null); // Clear selected contact
+    const handleSaveContact = () => { // Updated function name
+        setIsEditContact(false); // Updated state name
+        setSelectedContact(null); // Updated state name
     };
 
     if (loading) {
-        return <div>Loading...</div>; // Loading state
+        return <div>Loading...</div>;
     }
 
     if (error) {
-        return <div>{error}</div>; // Display error message if any
+        return <div>{error}</div>;
     }
 
     return (
         <div>
-            {contacts.length === 0 ? (
-                <ContactForm onSubmit={handleFormSubmit} /> // Show ContactForm if no contacts
+            {contactData.length === 0 ? (
+                <ContactForm onSubmit={handleContactFormSubmit} /> // Updated component
             ) : isEditContact ? (
                 <EditContact 
-                
                 setIsEditContact={setIsEditContact}
-                contacts={contacts}
-                /> // Ensure EditContact accepts 'contacts' prop
+                setContactData={setContactData} // Updated prop
+                />
             ) : (
-                <Contactpagepreview 
+                <ContactPagePreview
                     setIsEditContact={setIsEditContact}
-                    contacts={contacts} 
-                    onDelete={handleDelete} 
-                    onEdit={handleEditContact} // Pass handleEditContact
+                    contactData={contactData} // Updated prop
+                    onDelete={handleDeleteContact} // Updated prop
+                    setContactData={setContactData} // Updated prop
+                    onEdit={handleEditContact} // Updated prop
                 />
             )}
         </div>
     );
 }
 
-export default ContactSection;
+export default ContactSection; // Updated export

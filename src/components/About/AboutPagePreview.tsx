@@ -8,15 +8,15 @@ type AboutPagePreviewProps = {
     aboutData?: any[]; // Changed prop name
     onDelete: (id: string) => void; // Changed function name
     onEdit: (about: any) => void; // Changed function name
-  };
-  
-  const AboutPagePreview = ({ 
+};
+
+const AboutPagePreview = ({ 
     setIsEditAbout, 
     setAboutData,
-    aboutData = [], // Changed prop name
+    aboutData = [], 
     onDelete, 
     onEdit 
-  }: AboutPagePreviewProps) => { // Accept aboutData prop and onDeleteAbout function
+}: AboutPagePreviewProps) => {
     const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null); // State for dropdown
     const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
     const [aboutToDelete, setAboutToDelete] = useState<any>(null); // State for the about to delete
@@ -28,77 +28,92 @@ type AboutPagePreviewProps = {
         }
     };
 
+    const handleEdit = (about: any) => {
+        setIsEditAbout(true); // Show edit form
+        setAboutData(about); // Pass the selected about data for editing
+    };
+
     return (
-        <div className="max-w-2xl mx-auto p-4 border rounded-md shadow-md pb-6"> {/* Increased width */}
+        <div className="max-w-5xl mx-auto pb-6 mt-2 bg-white border rounded-lg shadow-lg p-10 "> {/* Adjusted mt-20 for margin-top */}
             {aboutData.length === 0 ? (
                 <p>No about data available.</p> // Message if no about data
             ) : (
                 aboutData.map((about, index) => (
-                    <div key={index} className="mb-4 p-4 border-b relative"> {/* Add bottom margin and padding */}
-                        <h3 className="text-lg font-semibold mb-2">{about.title}</h3> {/* Title */}
-                        {about.bg_image && ( // Display About image if it exists
-                            <Image 
-                                src={about.bg_image} 
-                                alt="Background Image" 
-                                width={150} 
-                                height={100} 
-                                className="rounded-md mb-2" 
-                            />
-                        )}
-                        <p className="text-gray-700 mb-1">{about.about_title}</p> {/* About title */}
-                        <p className="text-gray-700 mb-1">{about.about_heading}</p> {/* About heading */}
-                        <p className="text-gray-700 mb-1">{about.about_content}</p> {/* About content */}
-                        {about.about_image && ( // Display About image if it exists
-                            <Image 
-                                src={about.about_image} 
-                                alt="About Image" 
-                                width={150} 
-                                height={100} 
-                                className="rounded-md mb-2" 
-                            />
-                        )}
-                        <p className="text-gray-700 mb-1">{about.mv_title}</p> {/* MV title */}
-                        <p className="text-gray-700 mb-1">{about.mv_heading}</p> {/* MV heading */}
-                        <p className="text-gray-700 mb-1">{about.mv_content}</p> {/* MV content */}
-                        {about.mv_image && ( // Display MV image if it exists
-                            <Image 
-                                src={about.mv_image} 
-                                alt="MV Image" 
-                                width={150} 
-                                height={100} 
-                                className="rounded-md mb-2" 
-                            />
-                        )}
-                        <p className="text-gray-700 mb-1">{about.tc_title}</p> {/* TC title */}
-                        <p className="text-gray-700 mb-1">{about.tc_heading}</p> {/* TC heading */}
-                        <p className="text-gray-700 mb-1">{about.tc_content}</p> {/* TC content */}
-                        {about.tc_image && ( // Display TC image if it exists
-                            <Image 
-                                src={about.tc_image} 
-                                alt="TC Image" 
-                                width={150} 
-                                height={100} 
-                                className="rounded-md mb-2" 
-                            />
-                        )}
-                        <p className="text-gray-700 mb-1">{about.review_heading}</p> {/* Review heading */}
+                    <>
+                     <div className="border-b mb-4"> {/* Added border-bottom class */}
+                        <h1 className="text-2xl text-gray-700 font-bold mb-5">About Page Preview</h1> {/* Updated heading */}
+                    </div>
+                    <div key={index} className="mb-4 p-4 border-b flex justify-between items-start gap-10"> {/* Added gap-4 for spacing */}
+                        
+                        <div className="flex-1"> {/* Allow title and content to take available space */}
+                            <h3 className="text-xl text-gray-700 font-semibold mb-4">{about.title}</h3> {/* Title */}
+                            {about.bg_image && ( // Display About image if it exists
+                                <Image 
+                                    src={about.bg_image} 
+                                    alt="Background Image" 
+                                    width={300}  // Increased width
+                                    height={200} // Increased height
+                                    className="rounded-md mb-4" 
+                                />
+                            )}
+                            <p className="text-gray-700 text-lg mb-1">{about.about_title}</p> {/* About title */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2">{about.about_heading}</p> {/* About heading */}
+                            <p className="text-gray-700 mr-50 mb-4">{about.about_content}</p> {/* About content */}
+                            {about.about_image && ( // Display About image if it exists
+                                <Image 
+                                    src={about.about_image} 
+                                    alt="About Image" 
+                                    width={300}  // Increased width
+                                    height={200} // Increased height
+                                    className="rounded-md mb-4" 
+                                />
+                            )}
+                            <p className="text-gray-700 mb-1">{about.mv_title}</p> {/* MV title */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2">{about.mv_heading}</p> {/* MV heading */}
+                            <p className="text-gray-700 mr-50 mb-4">{about.mv_content}</p> {/* MV content */}
+                            {about.mv_image && ( // Display MV image if it exists
+                                <Image 
+                                    src={about.mv_image} 
+                                    alt="MV Image" 
+                                    width={300}  // Increased width
+                                    height={200} // Increased height
+                                    className="rounded-md mb-4" 
+                                />
+                            )}
+                            <p className="text-gray-700 mb-1">{about.tc_title}</p> {/* TC title */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2">{about.tc_heading}</p> {/* TC heading */}
+                            <p className="text-gray-700 mr-50 mb-4">{about.tc_content}</p> {/* TC content */}
+                            {about.tc_image && ( // Display TC image if it exists
+                                <Image 
+                                    src={about.tc_image} 
+                                    alt="TC Image" 
+                                    width={300}  // Increased width
+                                    height={200} // Increased height
+                                    className="rounded-md mb-4" 
+                                />
+                            )}
+                            <p className="text-gray-700 font-semibold text-xl mb-2">{about.review_heading}</p> {/* Review heading */}
+                        </div>
 
                         {/* Dropdown Button */}
-                        <div className="absolute top-2 right-2">
+                        <div className="flex flex-col items-end"> {/* Align dropdown button to the right */}
                             <button 
                                 className="text-gray-500 hover:text-gray-700 focus:outline-none hover:bg-gray-200 rounded-md p-2" 
-                                onClick={() => setDropdownOpenIndex(dropdownOpenIndex === index ? null : index)}
+                                onClick={(e) => {
+                                    // Toggle dropdown without preventing scroll
+                                    setDropdownOpenIndex(dropdownOpenIndex === index ? null : index);
+                                }}
                             >
                                 <FaEllipsisV className="h-3 w-3" />
                             </button>
                             {/* Dropdown Menu */}
-                            <div className={`absolute right-0 mt-2 w-34 bg-gray-100 border rounded-md shadow-lg z-10 ${dropdownOpenIndex === index ? 'block' : 'hidden'}`}>
+                            <div className={`mt-2 w-34 bg-gray-100 border rounded-md shadow-lg z-10 ${dropdownOpenIndex === index ? 'block' : 'hidden'}`}>
                                 <ul className="py-1">
                                     <li className="px-3 py-1 text-gray-700 hover:bg-gray-200 cursor-pointer flex">
                                         <button
                                             className="flex items-center"
                                             onClick={() => {
-                                                setIsEditAbout(true) // Changed function call
+                                                setIsEditAbout(true); // Changed function call
                                                 setDropdownOpenIndex(null);
                                                 onEdit(about); // Changed function call
                                             }}
@@ -119,6 +134,7 @@ type AboutPagePreviewProps = {
                             </div>
                         </div>
                     </div>
+                   </>
                 ))
             )}
 
@@ -134,7 +150,9 @@ type AboutPagePreviewProps = {
                         </div>
                     </div>
                 </div>
+                
             )}
+            
         </div>
     );
 };

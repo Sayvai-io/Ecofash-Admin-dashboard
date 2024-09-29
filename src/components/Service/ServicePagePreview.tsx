@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { FaEllipsisV, FaEdit, FaTrash } from "react-icons/fa"; // Import icons
+import Image from 'next/image'; // Import Image for displaying images
 
-type ServicePagePreviewProps = {
+type ServicePagePreviewProps = { // Updated type name
     setIsEditService: (isEdit: boolean) => void; // Changed function name
+    setServiceData: (data: any) => void; // Function to update the service data in the parent component
     serviceData?: any[]; // Changed prop name
     onDelete: (id: string) => void; // Changed function name
     onEdit: (service: any) => void; // Changed function name
@@ -10,10 +12,11 @@ type ServicePagePreviewProps = {
 
 const ServicePagePreview = ({ 
     setIsEditService, 
+    setServiceData,
     serviceData = [], // Changed prop name
     onDelete, 
     onEdit 
-}: ServicePagePreviewProps) => { // Accept serviceData prop and onDeleteService function
+}: ServicePagePreviewProps) => { // Updated props
     const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null); // State for dropdown
     const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
     const [serviceToDelete, setServiceToDelete] = useState<any>(null); // State for the service to delete
@@ -25,39 +28,70 @@ const ServicePagePreview = ({
         }
     };
 
+    const handleEdit = (service: any) => {
+        setIsEditService(true); // Show edit form
+        setServiceData(service); // Pass the selected service data for editing
+    };
+
     return (
-        <div className="max-w-2xl mx-auto p-4 border rounded-md shadow-md pb-6"> {/* Increased width */}
+        <div className="max-w-5xl mx-auto pb-6 mt-2 bg-white border rounded-lg shadow-lg p-10 "> {/* Adjusted mt-20 for margin-top */}
             {serviceData.length === 0 ? (
                 <p>No service data available.</p> // Message if no service data
             ) : (
                 serviceData.map((service, index) => (
-                    <div key={index} className="mb-4 p-4 border-b relative"> {/* Add bottom margin and padding */}
-                        <h3 className="text-lg font-semibold mb-2">{service.service_heading}</h3> {/* Service Heading */}
-                        <p className="text-gray-500 mb-1">{service.service_image}</p> {/* Service Image */}
-                        <p className="text-gray-700 mb-1">{service.service_content}</p> {/* Service Content */}
-                        <p className="text-gray-700 mb-1">{service.years_of_experience_title}</p> {/* Years of Experience Title */}
-                        <p className="text-gray-700 mb-1">{service.years_of_experience}</p> {/* Years of Experience */}
-                        <p className="text-gray-700 mb-1">{service.satisfied_clients_title}</p> {/* Satisfied Clients Title */}
-                        <p className="text-gray-700 mb-1">{service.satisfied_clients}</p> {/* Satisfied Clients */}
-                        <p className="text-gray-700 mb-1">{service.services_provided_title}</p> {/* Services Provided Title */}
-                        <p className="text-gray-700 mb-1">{service.services_provided}</p> {/* Services Provided */}
-                        <p className="text-gray-700 mb-1">{service.business_portfolios_title}</p> {/* Business Portfolios Title */}
-                        <p className="text-gray-700 mb-1">{service.business_portfolios}</p> {/* Business Portfolios */}
-                        <p className="text-gray-700 mb-1">{service.collection_heading}</p> {/* Collection Heading */}
-                        <p className="text-gray-700 mb-1">{service.collection_content}</p> {/* Collection Content */}
-                        <p className="text-gray-500 mb-1">{service.collection_image}</p> {/* Collection Image */}
-                        <p className="text-gray-700 mb-1">{service.service_provided_heading}</p> {/* Service Provided Heading */}
+                    <>
+                     <div className="border-b mb-4"> {/* Added border-bottom class */}
+                        <h1 className="text-2xl text-gray-700 font-bold mb-5">Service Page Preview</h1> {/* Updated heading */}
+                    </div>
+                    <div key={index} className="mb-4 p-4 border-b flex justify-between items-start gap-10"> {/* Added gap-4 for spacing */}
+                        
+                        <div className="flex-1"> {/* Allow title and content to take available space */}
+                            <h3 className="text-xl text-gray-700 font-semibold mb-4">{service.service_heading}</h3> {/* Service heading */}
+                            <p className="text-gray-700 text-lg mb-1">{service.service_content}</p> {/* Service content */}
+                            {service.service_image && ( // Display Service image if it exists
+                                <Image 
+                                    src={service.service_image} 
+                                    alt="Service Image" 
+                                    width={300}  
+                                    height={200} 
+                                    className="rounded-md mb-4" 
+                                />
+                            )}
+                            <p className="text-gray-700 mb-1">{service.years_of_experience_title}</p> {/* Years of experience title */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2">{service.years_of_experience}</p> {/* Years of experience */}
+                            <p className="text-gray-700 mb-1">{service.satisfied_clients_title}</p> {/* Satisfied clients title */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2">{service.satisfied_clients}</p> {/* Satisfied clients */}
+                            <p className="text-gray-700 mb-1">{service.services_provided_title}</p> {/* Services provided title */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2">{service.services_provided}</p> {/* Services provided */}
+                            <p className="text-gray-700 mb-1">{service.business_portfolios_title}</p> {/* Business portfolios title */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2">{service.business_portfolios}</p> {/* Business portfolios */}
+                            <p className="text-gray-700 mb-1">{service.collection_heading}</p> {/* Collection heading */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2">{service.collection_content}</p> {/* Collection content */}
+                            {service.collection_image && ( // Display Collection image if it exists
+                                <Image 
+                                    src={service.collection_image} 
+                                    alt="Collection Image" 
+                                    width={300}  
+                                    height={200} 
+                                    className="rounded-md mb-4" 
+                                />
+                            )}
+                            <p className="text-gray-700 font-semibold text-xl mb-2">{service.service_provided_heading}</p> {/* Collection content */}
+                        </div>
 
                         {/* Dropdown Button */}
-                        <div className="absolute top-2 right-2">
+                        <div className="flex flex-col items-end"> {/* Align dropdown button to the right */}
                             <button 
                                 className="text-gray-500 hover:text-gray-700 focus:outline-none hover:bg-gray-200 rounded-md p-2" 
-                                onClick={() => setDropdownOpenIndex(dropdownOpenIndex === index ? null : index)}
+                                onClick={(e) => {
+                                    // Toggle dropdown without preventing scroll
+                                    setDropdownOpenIndex(dropdownOpenIndex === index ? null : index);
+                                }}
                             >
                                 <FaEllipsisV className="h-3 w-3" />
                             </button>
                             {/* Dropdown Menu */}
-                            <div className={`absolute right-0 mt-2 w-34 bg-gray-100 border rounded-md shadow-lg z-10 ${dropdownOpenIndex === index ? 'block' : 'hidden'}`}>
+                            <div className={`mt-2 w-34 bg-gray-100 border rounded-md shadow-lg z-10 ${dropdownOpenIndex === index ? 'block' : 'hidden'}`}>
                                 <ul className="py-1">
                                     <li className="px-3 py-1 text-gray-700 hover:bg-gray-200 cursor-pointer flex">
                                         <button
@@ -84,6 +118,7 @@ const ServicePagePreview = ({
                             </div>
                         </div>
                     </div>
+                   </> 
                 ))
             )}
 
@@ -104,4 +139,4 @@ const ServicePagePreview = ({
     );
 };
 
-export default ServicePagePreview;
+export default ServicePagePreview; // Updated export

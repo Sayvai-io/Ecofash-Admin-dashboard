@@ -13,13 +13,13 @@ const supabase = createClient(
 type EditAboutReviewPageProps = {
   setIsEditReview: (isEdit: boolean) => void; // Function to set edit state
   reviewId: string; // ID of the review to edit
-  setReviewData: (data: any) => void; // Function to update the review data in the parent component
+  setReviewData: (data: any) => void; // This should be a function
 };
 
 const EditAboutReviewPage = ({ 
   setIsEditReview, 
   reviewId,
-  setReviewData // Add this prop to update the review data in the parent component
+  setReviewData = () => {} // Default to a no-op function
 }: EditAboutReviewPageProps) => {
   const [reviewData, setReviewDataLocal] = useState<any>(null);
   const [editReview, setEditReview] = useState<any>(null);
@@ -71,15 +71,26 @@ const EditAboutReviewPage = ({
   };
 
   const handleUpdate = async () => {
+    // Check if setReviewData is a function
+    if (typeof setReviewData !== 'function') {
+        console.error('setReviewData is not a function');
+        return;
+    }
+
+    let updatedReview = { ...editReview };
     let imageUrl = editReview.profile_image; // Default to existing image
 
     if (image) {
-      // Upload new image if selected
+      const uniqueFileName = `${Date.now()}_${image.name}`; // Append timestamp for uniqueness
       const { data, error } = await supabase.storage
         .from('blog-images')
-        .upload(`public/${image.name}`, image);
+        .upload(`public/${uniqueFileName}`, image);
 
       if (error) {
+        if (error.message === "The resource already exists") {
+          console.error('Image already exists. Please choose a different image.');
+          return; // Handle the duplicate error
+        }
         console.error('Error uploading image:', error);
         return;
       }
@@ -87,22 +98,25 @@ const EditAboutReviewPage = ({
       const { data: publicData } = supabase.storage
         .from('blog-images')
         .getPublicUrl(data.path);
-
       imageUrl = publicData.publicUrl; // Update imageUrl to new image URL
     } else if (editReview.profile_image === null) {
       // If the image was removed, set imageUrl to null
       imageUrl = null;
     }
 
+    updatedReview.profile_image = imageUrl; // Update the profile_image in the updatedReview object
+
     const { error } = await supabase
       .from('about_review')
-      .update({ ...editReview, profile_image: imageUrl })
-      .eq('id', editReview.id);
+      .update(updatedReview)
+      .eq('id', reviewId); // Ensure you are using reviewId here
 
     if (error) {
       console.error('Error updating review:', error);
     } else {
-      setReviewData((prevData: any) => prevData.map((review: any) => review.id === editReview.id ? { ...editReview, profile_image: imageUrl } : review)); // Update local state
+      setReviewData((prevData: any) => 
+        prevData.map((review: any) => review.id === updatedReview.id ? updatedReview : review)
+      ); // Update local state
       setIsEditReview(false); // Exit edit mode
     }
   };
