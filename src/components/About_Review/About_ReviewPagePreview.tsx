@@ -105,10 +105,10 @@ const About_ReviewPagePreview = ({
               )}
             </div>
             <div className="ml-4 flex-grow">
-              <h2 className="text-xl font-bold">{review.name}</h2>
-              <p className="text-gray-700">{review.designation}</p>
+              <h2 className="text-xl text-gray-700 font-semibold">{review.name}</h2>
+              <p className="text-gray-700 font-semibold">{review.designation}</p>
               <p className="text-gray-700">{review.comments}</p>
-              <p className="text-gray-500">Rating: {review.rating}</p>
+              <p className="text-gray-700">Rating: {review.rating}</p>
             </div>
             <div className="relative">
               <button className="text-gray-500 hover:text-gray-700 focus:outline-none hover:bg-gray-200 rounded-md p-2" onClick={() => setDropdownOpenIndex(dropdownOpenIndex === index ? null : index)}>

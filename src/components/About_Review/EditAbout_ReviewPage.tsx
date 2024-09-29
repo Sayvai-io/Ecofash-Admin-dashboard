@@ -173,8 +173,8 @@ const EditAboutReviewPage = ({
                 <Image 
                   src={imagePreview} 
                   alt="Profile Image" 
-                  width={300} 
-                  height={200} 
+                  width={150} 
+                  height={100} 
                   className="rounded-md mb-4" 
                 />
                 <div className="flex gap-2 mt-2"> {/* Flex container for icons */}
