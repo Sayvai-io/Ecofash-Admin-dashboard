@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js';
 import ContactForm from "./ContactForm"; // Updated import
 import EditContact from "./EditContact"; // Updated import
-import ContactPagePreview from "./ContactPagePreview";
+import ContactPagePreview from "./ContactPagePreview"; // Ensure this path is correct
 
 
 const supabase = createClient(
