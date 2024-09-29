@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createClient } from '@supabase/supabase-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faTrashAlt, faFileUpload } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 
 const supabase = createClient(
@@ -10,47 +10,41 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-type EditContactProps = { // Updated type name
-  setIsEditContact: (isEdit: boolean) => void; // Updated function name
-  setContactData: (data: any) => void; // Updated function name
+type EditContactProps = {
+  setIsEditContact: (isEdit: boolean) => void;
+  setContactData: (data: any) => void;
 };
 
-const EditContact = ({ // Updated component name
-  setIsEditContact,
-  setContactData
+const EditContact = ({ 
+  setIsEditContact, 
+  setContactData 
 }: EditContactProps) => {
-  const [contactData, setContactDataLocal] = useState<any>(null); // Updated state name
-  const [editContact, setEditContact] = useState<any>(null); // Updated state name
+  const [contactDataLocal, setContactDataLocal] = useState<any>(null);
+  const [editContact, setEditContact] = useState<any>(null);
   const [isDirty, setIsDirty] = useState(false);
   const [images, setImages] = useState<{ [key: string]: File | null }>({});
   const [imagePreviews, setImagePreviews] = useState<{ [key: string]: string | null }>({});
-  const [imageUploadActive, setImageUploadActive] = useState<{ [key: string]: boolean }>({
-    bg_image: false, // Updated field name
-     // Updated field name
-  });
   
   const fileInputRefs = {
-   // Updated field name
-    bg_image: useRef<HTMLInputElement>(null), // Updated field name
+    bg_image: useRef<HTMLInputElement>(null),
   };
 
   useEffect(() => {
-    const fetchContactData = async () => { // Updated function name
+    const fetchContactData = async () => {
       const { data, error } = await supabase
-        .from('contact') // Updated table name
+        .from('contact')
         .select('*');
 
       if (error) {
-        console.error('Error fetching contact data:', error); // Updated log message
+        console.error('Error fetching contact data:', error);
         return;
       }
 
       setContactDataLocal(data);
       if (data && data.length > 0) {
-        setEditContact(data[0]); // Updated state name
+        setEditContact(data[0]);
         setImagePreviews({
-          bg_image: data[0].bg_image, // Updated field name
-          // Updated field name
+          bg_image: data[0].bg_image,
         });
       }
     };
@@ -59,7 +53,7 @@ const EditContact = ({ // Updated component name
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setEditContact({ ...editContact, [e.target.name]: e.target.value }); // Updated state name
+    setEditContact({ ...editContact, [e.target.name]: e.target.value });
     setIsDirty(true);
   };
 
@@ -69,35 +63,37 @@ const EditContact = ({ // Updated component name
       setImages({ ...images, [field]: file });
       setImagePreviews({ ...imagePreviews, [field]: URL.createObjectURL(file) });
       setIsDirty(true);
-      setImageUploadActive({ ...imageUploadActive, [field]: false }); // Deactivate upload button on image change
     }
   };
 
   const handleRemoveImage = (field: string) => {
     setImages({ ...images, [field]: null });
     setImagePreviews({ ...imagePreviews, [field]: null });
-    setEditContact({ ...editContact, [field]: null }); // Updated state name
+    setEditContact({ ...editContact, [field]: null });
     setIsDirty(true);
-    setImageUploadActive({ ...imageUploadActive, [field]: true }); // Activate upload button on delete
   };
 
-  const handleUpdateContact = async () => { // Updated function name
-    let updatedContact = { ...editContact }; // Updated state name
+  const handleUpdateContact = async () => {
+    let updatedContact = { ...editContact };
 
-    for (const field of ['bg_image']) { // Updated field names
-      if (images[field]) {
-        const uniqueFileName = `${Date.now()}_${images[field].name}`; // Append timestamp for uniqueness
+    for (const field of ['bg_image']) {
+      const file = images[field];
+      if (file) {
+        const uniqueFileName = `${Date.now()}_${file.name}`;
+        
+        // Upload the image
         const { data, error } = await supabase.storage
-          .from('blog-images') // Updated storage name
-          .upload(`public/${uniqueFileName}`, images[field]);
+          .from('contact-images')
+          .upload(`public/${uniqueFileName}`, file);
 
         if (error) {
           console.error(`Error uploading ${field}:`, error);
+          alert(`Failed to upload ${field}. Please try again.`);
           return;
         }
 
         const { data: publicData } = supabase.storage
-          .from('blog-images') // Updated storage name
+          .from('contact-images')
           .getPublicUrl(data.path);
         const publicURL = publicData.publicUrl;
 
@@ -105,16 +101,18 @@ const EditContact = ({ // Updated component name
       }
     }
 
+    // Update the contact data in the database
     const { error } = await supabase
-      .from('contact') // Updated table name
+      .from('contact')
       .update(updatedContact)
-      .eq('id', editContact.id); // Updated state name
+      .eq('id', editContact.id);
 
     if (error) {
       console.error('Error updating contact:', error);
+      alert('Failed to update contact data. Please try again.');
     } else {
-      setContactData((prevData: any) => prevData.map((contact: any) => contact.id === editContact.id ? updatedContact : contact)); // Update local state
-      setIsEditContact(false); // Close the edit form
+      setContactData((prevData: any) => prevData.map((contact: any) => contact.id === editContact.id ? updatedContact : contact));
+      setIsEditContact(false);
       setIsDirty(false);
     }
   };
@@ -127,145 +125,149 @@ const EditContact = ({ // Updated component name
     setIsEditContact(false);
   };
 
-  if (!contactData) return <div>Loading...</div>; // Updated loading message
+  if (!contactDataLocal) return <div>Loading...</div>;
 
   return (
-    <div className="bg-white border rounded-lg shadow-lg p-6"> {/* Added classes for styling */}
-      <div className="flex items-center gap-8 border-b pt-4 pb-4 mb-4"> {/* Added flex container with gap */}
+    <div className="bg-white border rounded-lg shadow-lg p-6">
+      <div className="flex items-center gap-8 border-b pt-4 pb-4 mb-4">
         <button onClick={handleBack} className="flex items-center mb-2 w-8 px-2 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-white"> 
           <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
         </button>
-        <h1 className="text-black text-2xl font-bold mb-2">Edit Contact Page</h1> {/* Updated heading */}
+        <h1 className="text-black text-2xl font-bold mb-2">Edit Contact</h1>
       </div>
       {editContact && (
         <form onSubmit={(e) => { e.preventDefault(); handleUpdateContact(); }} className="px-15">
+          {/* Title Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Title</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
               name="title" 
-              value={editContact.title} // Updated state name
+              value={editContact.title} 
               onChange={handleChange} 
-            /> {/* Title input */}
+            />
           </div>
-          <div className="mb-4"> {/* Contact Title Input */}
-            <label className="block mb-2 text-gray-500 font-semibold">Contact Subquotes</label>
+
+          {/* Subquote Input */}
+          <div className="mb-4">
+            <label className="block mb-2 text-gray-500 font-semibold">Subquote</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
               name="subquotes" 
-              value={editContact.subquotes} // Updated state name
+              value={editContact.subquotes} 
               onChange={handleChange} 
-            /> {/* Contact Title input */}
+            />
           </div>
-          
-          <div className="mb-4"> {/* Background Image Display */}
+
+          {/* Background Image Display */}
+          <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Background Image</label>
-            {imagePreviews.bg_image ? ( // Check if the background image preview exists
+            {imagePreviews.bg_image ? (
               <div className="mb-2">
                 <Image 
-                  src={imagePreviews.bg_image} // Updated field name
+                  src={imagePreviews.bg_image} 
                   alt="Background Image" 
                   width={300} 
                   height={200} 
                   className="rounded-md mb-4" 
                 />
-                <div className="flex gap-2 mt-2"> {/* Flex container for icons */}
-                  <button 
-                    type="button" 
-                    onClick={() => handleRemoveImage('bg_image')} // Updated field name
-                    className="flex items-center px-2 py-1 bg-red-500 text-white rounded"
-                  >
-                   Replace Image {/* Trash icon without margin */}
-                  </button>
-                </div>
-              </div>
-            ) : ( // No image box
-              <div 
-                className={`w-[300px] h-[200px] bg-gray-200 rounded-md flex items-center justify-center mb-2 cursor-pointer ${imageUploadActive.bg_image ? '' : 'opacity-50 cursor-not-allowed'}`} // Updated field name
-                onClick={() => imageUploadActive.bg_image && fileInputRefs.bg_image.current?.click()} // Clickable area
-              >
-                <span className="text-gray-700">Upload Image</span>
                 <button 
                   type="button" 
-                  className="flex items-center px-3 py-2 text-gray-700 rounded ml-2" // Added margin-left for spacing
-                  disabled={!imageUploadActive.bg_image}
+                  onClick={() => handleRemoveImage('bg_image')} 
+                  className="flex items-center px-2 py-1 bg-red-500 text-white rounded"
                 >
-                  <FontAwesomeIcon icon={faFileUpload} /> {/* File upload icon without margin */}
+                  Replace Image
                 </button>
+              </div>
+            ) : (
+              <div 
+                className={`w-[300px] h-[200px] bg-gray-200 rounded-md flex items-center justify-center mb-2 cursor-pointer`} 
+                onClick={() => fileInputRefs.bg_image.current?.click()}
+              >
+                <span className="text-gray-700">Upload Image</span>
               </div>
             )}
             <input 
               type="file" 
               accept="image/*" 
-              onChange={(e) => handleImageChange(e, 'bg_image')} // Updated field name
-              ref={fileInputRefs.bg_image} // Updated field name
+              onChange={(e) => handleImageChange(e, 'bg_image')} 
+              ref={fileInputRefs.bg_image} 
               className="hidden" 
             />
           </div>
-          
-          
-          {/* Additional fields for contact data */}
-          <div className="mb-4"> {/* Contact Title Input */}
+
+          {/* Contact Title Input */}
+          <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Contact Title</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
               name="contact_title" 
-              value={editContact.contact_title} // Updated state name
+              value={editContact.contact_title} 
               onChange={handleChange} 
-            /> {/* Contact Title input */}
+            />
           </div>
-          <div className="mb-4"> {/* Contact Content Input */}
+
+          {/* Contact Content Input */}
+          <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Contact Content</label>
             <textarea 
               className="w-full px-4 py-2 border rounded" 
               name="contact_content" 
-                value={editContact.contact_content} // Updated state name
+              value={editContact.contact_content} 
               onChange={handleChange} 
-            /> {/* Contact Content input */}
+            />
           </div>
-          <div className="mb-4"> {/* Contact Phone Input */}
+
+          {/* Contact Phone Input */}
+          <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Contact Phone</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
               name="contact_phone" 
-                value={editContact.contact_phone} // Updated state name
+              value={editContact.contact_phone} 
               onChange={handleChange} 
-            /> {/* Contact Phone input */}
+            />
           </div>
-          <div className="mb-4"> {/* Email Title Input */}
+
+          {/* Email Title Input */}
+          <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Email Title</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
               name="email_title" 
-                value={editContact.email_title} // Updated state name
+              value={editContact.email_title} 
               onChange={handleChange} 
-            /> {/* Email Title input */}
+            />
           </div>
-          <div className="mb-4"> {/* Email Content Input */}
+
+          {/* Email Content Input */}
+          <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Email Content</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
               name="email_content" 
-              value={editContact.email_content} // Updated state name
+              value={editContact.email_content} 
               onChange={handleChange} 
-            /> {/* Email Content input */}
+            />
           </div>
-          <div className="mb-4"> {/* Email Input */}
+
+          {/* Email Input */}
+          <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Email</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
               name="email" 
-              value={editContact.email} // Updated state name
+              value={editContact.email} 
               onChange={handleChange} 
-            /> {/* Email input */}
+            />
           </div>
 
-          <button type="submit" className={`w-20 px-4 py-2 bg-[#609641] text-white rounded ${!isDirty ? 'opacity-50 cursor-not-allowed' : ''} mt-4 mb-8`} disabled={!isDirty}>Update</button> {/* Update button */}
-          <button type="button" onClick={handleCancel} className="w-20 px-4 py-2 bg-gray-500 text-white rounded mt-4 mb-8">Cancel</button> {/* Cancel button */}
+          <button type="submit" className={`w-20 px-4 py-2 bg-[#609641] text-white rounded ${!isDirty ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={!isDirty}>Update</button>
+          <button type="button" onClick={handleCancel} className="w-20 px-4 py-2 bg-gray-500 text-white rounded mt-4">Cancel</button>
         </form>
       )}
     </div>
   );
 };
 
-export default EditContact; // Updated export
+export default EditContact; 
