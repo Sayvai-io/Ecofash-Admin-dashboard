@@ -5,7 +5,7 @@ import Login from "@/components/Login/page";
 import DefaultLayout from "@/components/Layouts/DefaultLaout";
 import Blog from "../components/Dashboard/index";
 import supabase from "@/utils/supabaseClient";
-import Profile from "../components/ProfileBox/index"
+import HomeSection from "@/components/Home/HomeSection"
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,7 +27,7 @@ export default function Home() {
   if (isLoggedIn) {
     return (
       <DefaultLayout>
-        <Profile />
+        <HomeSection />
       </DefaultLayout>
     );
   }

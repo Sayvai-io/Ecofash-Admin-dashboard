@@ -46,15 +46,24 @@ const HomePagePreview = ({
                     <div key={index} className="mb-4 p-4 border-b flex justify-between items-start gap-10"> {/* Added gap-4 for spacing */}
                         
                         <div className="flex-1"> {/* Allow title and content to take available space */}
-                            <h3 className="text-xl text-gray-700 font-semibold mb-4">{home.heading}</h3> {/* Heading */}
-                            <h3 className="text-xl text-gray-700 font-semibold mb-4">{home.head_content}</h3> {/* Heading */}
+                            {home.logo_image && ( // Display Head image if it exists
+                                <Image 
+                                    src={home.logo_image} 
+                                    alt="Logo Image" 
+                                    width={300}  
+                                    height={200} 
+                                    className="rounded-md mb-10" 
+                                />
+                            )}
+                            <h3 className="text-2xl text-gray-700 font-semibold mb-4">{home.heading}</h3> {/* Heading */}
+                            <h3 className="text-lg text-gray-700 mb-4">{home.head_content}</h3> {/* Heading */}
                             {home.head_image && ( // Display Head image if it exists
                                 <Image 
                                     src={home.head_image} 
                                     alt="Head Image" 
                                     width={300}  
                                     height={200} 
-                                    className="rounded-md mb-4" 
+                                    className="rounded-md mb-10" 
                                 />
                             )}
                             <p className="text-gray-700 text-lg mb-1">{home.about_title}</p> {/* About title */}
@@ -75,11 +84,11 @@ const HomePagePreview = ({
                                     alt="Services Image" 
                                     width={300}  
                                     height={200} 
-                                    className="rounded-md mb-4" 
+                                    className="rounded-md mb-10" 
                                 />
                             )}
                             <p className="text-gray-700 mb-1">{home.contact_heading}</p> {/* Contact heading */}
-                            <p className="text-gray-700 font-semibold text-xl mb-2">{home.contact_content}</p> {/* Contact content */}
+                            <p className="text-gray-700 font-semibold text-lg mb-2">{home.contact_content}</p> {/* Contact content */}
                             {home.contact_image && ( // Display Contact image if it exists
                                 <Image 
                                     src={home.contact_image} 

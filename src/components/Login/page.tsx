@@ -47,10 +47,10 @@ const Login: React.FC<{ onLogin: () => void }> = ({ onLogin }) => { // Accept on
     <div className="min-h-screen flex items-center justify-center p-6">
       <Card className="w-full max-w-md">
         <CardContent className="p-6">
-          <Typography variant="h5" component="h1" className="mb-6 text-center">
+          <Typography variant="h5" component="h1" className="mb-12 text-center">
             Sign in to your account
           </Typography>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 mt-6">
             <TextField
               fullWidth
               label="Username"
@@ -77,9 +77,9 @@ const Login: React.FC<{ onLogin: () => void }> = ({ onLogin }) => { // Accept on
               variant="contained"
               type="submit"
               sx={{
-                backgroundColor: "#16C3A6",
+                backgroundColor: "#609641",
                 "&:hover": {
-                  backgroundColor: "#14a89d",
+                  backgroundColor: "#609641",
                 },
               }}
             >

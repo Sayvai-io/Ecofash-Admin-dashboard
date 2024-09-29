@@ -26,6 +26,7 @@ const EditHomePage = ({
   const [imagePreviews, setImagePreviews] = useState<{ [key: string]: string | null }>({});
   const [imageUploadActive, setImageUploadActive] = useState<{ [key: string]: boolean }>({
     head_image: false,
+    logo_image: false,
     about_image: false,
     contact_image: false,
     services_image: false,
@@ -33,6 +34,7 @@ const EditHomePage = ({
   
   const fileInputRefs = {
     head_image: useRef<HTMLInputElement>(null), // Updated field name
+    logo_image: useRef<HTMLInputElement>(null), // Updated field name
     about_image: useRef<HTMLInputElement>(null), // Updated field name
     contact_image: useRef<HTMLInputElement>(null), // Updated field name
     services_image: useRef<HTMLInputElement>(null), // Updated field name
@@ -54,6 +56,7 @@ const EditHomePage = ({
         setEditHome(data[0]); // Updated state name
         setImagePreviews({
           head_image: data[0].head_image, // Updated field name
+          logo_image: data[0].logo_image, // Updated field name
           about_image: data[0].about_image, // Updated field name
           contact_image: data[0].contact_image, // Updated field name
           services_image: data[0].services_image, // Updated field name
@@ -90,7 +93,7 @@ const EditHomePage = ({
   const handleUpdateHome = async () => { // Updated function name
     let updatedHome = { ...editHome }; // Updated state name
 
-    for (const field of ['head_image', 'about_image', 'contact_image', 'services_image']) { // Updated fields
+    for (const field of ['head_image', 'logo_image', 'about_image', 'contact_image', 'services_image']) { // Updated fields
       if (images[field]) {
         const uniqueFileName = `${Date.now()}_${images[field].name}`; // Append timestamp for uniqueness
         const { data, error } = await supabase.storage
@@ -145,12 +148,56 @@ const EditHomePage = ({
       </div>
       {editHome && (
         <form onSubmit={(e) => { e.preventDefault(); handleUpdateHome(); }} className="px-15">
+          <div className="mb-4"> {/* Head Image Display */}
+            <label className="block mb-2 text-gray-500 font-semibold">Logo Image</label>
+            {imagePreviews.logo_image ? ( // Check if the head image preview exists
+              <div className="mb-2">
+                <Image 
+                  src={imagePreviews.logo_image} // Updated field name
+                  alt="Logo Image" 
+                  width={300} 
+                  height={200} 
+                  className="rounded-md mb-4" 
+                />
+                <div className="flex gap-2 mt-2"> {/* Flex container for icons */}
+                  <button 
+                    type="button" 
+                    onClick={() => handleRemoveImage('logo_image')} // Updated field name
+                    className="flex items-center px-2 py-1 bg-red-500 text-white rounded"
+                  >
+                   Replace Image {/* Trash icon without margin */}
+                  </button>
+                </div>
+              </div>
+            ) : ( // No image box
+              <div 
+                className={`w-[300px] h-[200px] bg-gray-200 rounded-md flex items-center justify-center mb-2 cursor-pointer ${imageUploadActive.logo_image ? '' : 'opacity-50 cursor-not-allowed'}`} // Updated field name
+                onClick={() => imageUploadActive.logo_image && fileInputRefs.logo_image.current?.click()} // Clickable area
+              >
+                <span className="text-gray-700">Upload Image</span>
+                <button 
+                  type="button" 
+                  className="flex items-center px-3 py-2 text-gray-700 rounded ml-2" // Added margin-left for spacing
+                    disabled={!imageUploadActive.logo_image}
+                >
+                  <FontAwesomeIcon icon={faFileUpload} /> {/* File upload icon without margin */}
+                </button>
+              </div>
+            )}
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={(e) => handleImageChange(e, 'logo_image')} // Updated field name
+              ref={fileInputRefs.logo_image} // Updated field name
+              className="hidden" 
+            />
+          </div>
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Heading</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
-              name="heading" // Updated field name
-              value={editHome.heading} // Updated state name
+              name="logo_heading" // Updated field name
+              value={editHome.logo_heading} // Updated state name
               onChange={handleChange} 
             /> {/* Heading input */}
           </div>
@@ -159,8 +206,8 @@ const EditHomePage = ({
             <label className="block mb-2 text-gray-500 font-semibold">Heading Content</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
-              name="head_content" // Updated field name
-              value={editHome.head_content} // Updated state name
+              name="logo_content" // Updated field name
+              value={editHome.logo_content} // Updated state name
               onChange={handleChange} 
             /> {/* Heading input */}
           </div>
