@@ -1,23 +1,25 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js';
-import SeperateServiceForm from "./Seperate_ServiceForm";
-import SeperateServicePagePreview from "./Seperate_ServicePagePreview";
-import EditSeperateServicePage from "./EditSeperate_ServicePage"; // Assuming EditSeperateServicePage is imported from somewhere
+import Seperate_ServiceForm from "./Seperate_ServiceForm"; // Updated import
+import Seperate_ServicePagePreview from "./Seperate_ServicePagePreview"; // Updated import
+import EditSeperate_ServicePage from "./EditSeperate_ServicePage"; // Updated import
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-const SeperateServiceSection = () => {
+const Seperate_ServiceSection = () => {
     const [serviceData, setServiceData] = useState<any[]>([]); // Changed state to hold service data
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState<string | null>(null); // State to hold error messages
     const [isServiceEmpty, setIsServiceEmpty] = useState(false); // Changed state name
     const [isEditService, setIsEditService] = useState(false); // State for EditService visibility
     const [selectedService, setSelectedService] = useState<any | null>(null); // State to hold the selected service for editing
-    const [serviceId, setServiceId] = useState<string | null>(null); // State to hold the service ID
+    const [serviceId, setServiceId] = useState(); // State to hold the service ID
+    const [showServiceForm, setShowServiceForm] = useState(false); // State to manage form visibility
+    const [isAddServiceOpen, setIsAddServiceOpen] = useState(false); // State for Add Service form visibility
 
     useEffect(() => {
         const fetchServiceData = async () => {
@@ -42,7 +44,7 @@ const SeperateServiceSection = () => {
 
     const handleServiceFormSubmit = async (formData: any) => {
         const { error } = await supabase
-            .from("seperate_service") // Insert into the 'seperate_service' table
+            .from("seperate_service") // Ensure this matches your table name
             .insert([formData]); // Insert the new service data
 
         if (error) {
@@ -51,11 +53,21 @@ const SeperateServiceSection = () => {
         } else {
             setServiceData([...serviceData, formData]); // Update service data state
             setIsServiceEmpty(false); // Show service preview after adding
+            setIsAddServiceOpen(false); // Close the Add Service form
         }
     };
 
-    const handleDeleteService = (id: string) => {
-        // Logic to delete the service data by id
+    const handleDeleteService = async (id: string) => {
+        const { error } = await supabase
+            .from("seperate_service") // Ensure this matches your table name
+            .delete()
+            .eq("id", id); // Delete the service by ID
+
+        if (error) {
+            console.error("Error deleting service:", error);
+        } else {
+            setServiceData(serviceData.filter(service => service.id !== id)); // Update state after deletion
+        }
     };
 
     const handleEditService = (service: any) => {
@@ -68,6 +80,18 @@ const SeperateServiceSection = () => {
         setSelectedService(null); // Clear selected service
     };
 
+    const handleAddServiceToggle = () => {
+        setIsAddServiceOpen(prev => !prev); // Toggle the Add Service form
+        if (isAddServiceOpen) {
+            setIsEditService(false); // Close edit mode if opening add service
+        }
+    };
+
+    const handleBack = () => {
+        setIsAddServiceOpen(false); // Close Add Service form
+        setIsEditService(false); // Ensure Edit mode is closed
+    };
+
     if (loading) {
         return <div>Loading...</div>; // Loading state
     }
@@ -78,24 +102,29 @@ const SeperateServiceSection = () => {
 
     return (
         <div>
-            {serviceData.length === 0 ? (
-                <SeperateServiceForm onSubmit={handleServiceFormSubmit} /> // Show SeperateServiceForm if no service data
+            {isAddServiceOpen ? (
+                <Seperate_ServiceForm 
+                    onSubmit={handleServiceFormSubmit} 
+                    onBack={handleBack} // Pass the handleBack function
+                />
             ) : isEditService ? (
-                <EditSeperateServicePage 
+                <EditSeperate_ServicePage 
                     setIsEditService={setIsEditService}
                     serviceId={serviceId}
-                    serviceData={serviceData}/> // Ensure EditSeperateServicePage accepts 'serviceData' prop
+                    serviceData={serviceData} // Ensure EditServiceProvidedPage accepts 'serviceData' prop
+                />
             ) : (
-                <SeperateServicePagePreview 
+                <Seperate_ServicePagePreview 
                     setIsEditService={setIsEditService}
                     setServiceId={setServiceId}
                     serviceData={serviceData} 
                     onDelete={handleDeleteService} 
                     onEdit={handleEditService} // Pass handleEditService
+                    onAddServiceToggle={handleAddServiceToggle} // Pass the toggle function
                 />
             )}
         </div>
     );
 }
 
-export default SeperateServiceSection;
+export default Seperate_ServiceSection;

@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createClient } from '@supabase/supabase-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faFileUpload } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 
 const supabase = createClient(
@@ -26,6 +26,9 @@ const EditAboutReviewPage = ({
   const [isDirty, setIsDirty] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageUploadActive, setImageUploadActive] = useState<{ [key: string]: boolean }>({
+    profile_image: false,
+  });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -60,6 +63,7 @@ const EditAboutReviewPage = ({
       setImage(file);
       setImagePreview(URL.createObjectURL(file));
       setIsDirty(true);
+      setImageUploadActive({ ...imageUploadActive, profile_image: true }); // Activate upload button
     }
   };
 
@@ -68,6 +72,7 @@ const EditAboutReviewPage = ({
     setImagePreview(null);
     setEditReview({ ...editReview, profile_image: null });
     setIsDirty(true);
+    setImageUploadActive({ ...imageUploadActive, profile_image: false }); // Deactivate upload button
   };
 
   const handleUpdate = async () => {
@@ -132,15 +137,17 @@ const EditAboutReviewPage = ({
   if (!reviewData) return <div>Loading...</div>;
 
   return (
-    <div>
-      <button onClick={handleBack} className="top-4 left-4 flex items-center w-20 px-4 py-2 bg-gray-500 text-white rounded">
-        <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
-        Back
-      </button>
+    <div className="bg-white border rounded-lg shadow-lg p-6"> {/* Added classes for styling */}
+      <div className="flex items-center gap-8 border-b pt-4 pb-4 mb-4"> {/* Added flex container with gap */}
+        <button onClick={handleBack} className="flex items-center mb-2 w-8 px-2 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-white"> 
+          <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
+        </button>
+        <h1 className="text-black text-2xl font-bold mb-2">Edit About Page</h1> {/* Removed margin-top since gap is applied */}
+      </div>
       {editReview && (
-        <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }} className="px-30">
+        <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }} className="px-20">
           <div className="mb-4">
-            <label className="block mb-1">Name</label>
+            <label className="block mb-2 text-gray-500 font-semibold">Name</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
               name="name" 
@@ -150,7 +157,7 @@ const EditAboutReviewPage = ({
             />
           </div>
           <div className="mb-4">
-            <label className="block mb-1">Designation</label>
+            <label className="block mb-2 text-gray-500 font-semibold">Designation</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
               name="designation" 
@@ -159,23 +166,38 @@ const EditAboutReviewPage = ({
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block mb-1">Profile Image</label>
-            {imagePreview && (
-              <div className="relative mb-2">
+          <div className="mb-4"> {/* About Image Display */}
+            <label className="block mb-2 text-gray-500 font-semibold">Profile Image</label>
+            {imagePreview ? ( // Check if the image preview exists
+              <div className="mb-2">
                 <Image 
                   src={imagePreview} 
                   alt="Profile Image" 
-                  width={150} 
-                  height={100} 
-                  className="rounded-md" 
+                  width={300} 
+                  height={200} 
+                  className="rounded-md mb-4" 
                 />
+                <div className="flex gap-2 mt-2"> {/* Flex container for icons */}
+                  <button 
+                    type="button" 
+                    onClick={handleRemoveImage} 
+                    className="flex items-center px-2 py-1 bg-red-500 text-white rounded"
+                  >
+                   Replace Image {/* Button text */}
+                  </button>
+                </div>
+              </div>
+            ) : ( // No image box
+              <div 
+                className={`w-[300px] h-[200px] bg-gray-200 rounded-md flex items-center justify-center mb-2 cursor-pointer`} 
+                onClick={() => fileInputRef.current?.click()} // Clickable area
+              >
+                <span className="text-gray-700">Upload Image</span>
                 <button 
                   type="button" 
-                  onClick={handleRemoveImage} 
-                  className="px-4 py-2 bg-red-500 text-white rounded"
+                  className="flex items-center px-3 py-2 text-gray-700 rounded ml-2" // Added margin-left for spacing
                 >
-                  Remove Image
+                  <FontAwesomeIcon icon={faFileUpload} /> {/* File upload icon without margin */}
                 </button>
               </div>
             )}
@@ -186,16 +208,9 @@ const EditAboutReviewPage = ({
               ref={fileInputRef} 
               className="hidden" 
             />
-            <button 
-              type="button" 
-              onClick={() => fileInputRef.current?.click()} 
-              className="px-4 py-2 bg-blue-500 text-white rounded"
-            >
-              Choose Image
-            </button>
           </div>
           <div className="mb-4">
-            <label className="block mb-1">Comments</label>
+            <label className="block mb-2 text-gray-500 font-semibold">Comments</label>
             <textarea 
               className="w-full px-4 py-2 border rounded" 
               name="comments" 
@@ -205,7 +220,7 @@ const EditAboutReviewPage = ({
             />
           </div>
           <div className="mb-4">
-            <label className="block mb-1">Rating</label>
+            <label className="block mb-2 text-gray-500 font-semibold">Rating</label>
             <input 
               type="number" 
               className="w-full px-4 py-2 border rounded" 
@@ -216,8 +231,8 @@ const EditAboutReviewPage = ({
               required
             />
           </div>
-          <button type="button" onClick={handleCancel} className="w-20 px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
-          <button type="submit" className={`w-20 px-4 py-2 bg-blue-500 text-white rounded ${!isDirty ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={!isDirty}>Update</button>
+          <button type="submit" className={`w-20 px-4 py-2 bg-[#609641] text-white rounded ${!isDirty ? 'opacity-50 cursor-not-allowed' : ''} mt-4 mb-8`} disabled={!isDirty}>Update</button> {/* Update button */}
+          <button type="button" onClick={handleCancel} className="w-20 px-4 py-2 bg-gray-500 text-white rounded mt-4 mb-8">Cancel</button>
         </form>
       )}
     </div>

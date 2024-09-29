@@ -1,23 +1,25 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js';
-import ServiceProvidedForm from "./Service_ProvidedForm";
-import ServiceProvidedPagePreview from "./Service_ProvidedPagePreview";
-import EditServiceProvidedPage from "./EditService_ProvidedPage"; // Assuming EditServiceProvidedPage is imported from somewhere
+import Service_ProvidedForm from "./Service_ProvidedForm"; // Updated import
+import Service_ProvidedPagePreview from "./Service_ProvidedPagePreview"; // Updated import
+import EditService_ProvidedPage from "./EditService_ProvidedPage"; // Updated import
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-const ServiceProvidedSection = () => {
+const Service_ProvidedSection = () => {
     const [serviceData, setServiceData] = useState<any[]>([]); // Changed state to hold service data
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState<string | null>(null); // State to hold error messages
     const [isServiceEmpty, setIsServiceEmpty] = useState(false); // Changed state name
     const [isEditService, setIsEditService] = useState(false); // State for EditService visibility
     const [selectedService, setSelectedService] = useState<any | null>(null); // State to hold the selected service for editing
-    const [serviceId, setServiceId] = useState<string | null>(null); // State to hold the service ID
+    const [serviceId, setServiceId] = useState(); // State to hold the service ID
+    const [showServiceForm, setShowServiceForm] = useState(false); // State to manage form visibility
+    const [isAddServiceOpen, setIsAddServiceOpen] = useState(false); // State for Add Service form visibility
 
     useEffect(() => {
         const fetchServiceData = async () => {
@@ -42,7 +44,7 @@ const ServiceProvidedSection = () => {
 
     const handleServiceFormSubmit = async (formData: any) => {
         const { error } = await supabase
-            .from("service_provided") // Insert into the 'service_provided' table
+            .from("service_provided") // Ensure this matches your table name
             .insert([formData]); // Insert the new service data
 
         if (error) {
@@ -51,6 +53,7 @@ const ServiceProvidedSection = () => {
         } else {
             setServiceData([...serviceData, formData]); // Update service data state
             setIsServiceEmpty(false); // Show service preview after adding
+            setIsAddServiceOpen(false); // Close the Add Service form
         }
     };
 
@@ -68,6 +71,18 @@ const ServiceProvidedSection = () => {
         setSelectedService(null); // Clear selected service
     };
 
+    const handleAddServiceToggle = () => {
+        setIsAddServiceOpen(prev => !prev); // Toggle the Add Service form
+        if (isAddServiceOpen) {
+            setIsEditService(false); // Close edit mode if opening add service
+        }
+    };
+
+    const handleBack = () => {
+        setIsAddServiceOpen(false); // Close Add Service form
+        setIsEditService(false); // Ensure Edit mode is closed
+    };
+
     if (loading) {
         return <div>Loading...</div>; // Loading state
     }
@@ -78,24 +93,29 @@ const ServiceProvidedSection = () => {
 
     return (
         <div>
-            {serviceData.length === 0 ? (
-                <ServiceProvidedForm onSubmit={handleServiceFormSubmit} /> // Show ServiceProvidedForm if no service data
+            {isAddServiceOpen ? (
+                <Service_ProvidedForm 
+                    onSubmit={handleServiceFormSubmit} 
+                    onBack={handleBack} // Pass the handleBack function
+                />
             ) : isEditService ? (
-                <EditServiceProvidedPage 
+                <EditService_ProvidedPage 
                     setIsEditService={setIsEditService}
                     serviceId={serviceId}
-                    serviceData={serviceData}/> // Ensure EditServiceProvidedPage accepts 'serviceData' prop
+                    serviceData={serviceData} // Ensure EditServiceProvidedPage accepts 'serviceData' prop
+                />
             ) : (
-                <ServiceProvidedPagePreview 
+                <Service_ProvidedPagePreview 
                     setIsEditService={setIsEditService}
                     setServiceId={setServiceId}
                     serviceData={serviceData} 
                     onDelete={handleDeleteService} 
                     onEdit={handleEditService} // Pass handleEditService
+                    onAddServiceToggle={handleAddServiceToggle} // Pass the toggle function
                 />
             )}
         </div>
     );
 }
 
-export default ServiceProvidedSection;
+export default Service_ProvidedSection;

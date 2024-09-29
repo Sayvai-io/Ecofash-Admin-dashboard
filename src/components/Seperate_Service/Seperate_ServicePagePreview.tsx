@@ -1,16 +1,16 @@
-
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import supabase from "@/utils/supabaseClient";
-import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEllipsisV, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 
-type ServicePagePreviewProps = {
+type ServiceProvidedPagePreviewProps = {
   setIsEditService: (isEdit: boolean) => void;
-  setServiceId: (id: any) => void;
-  serviceData?: any[];
+  setServiceId: (id: any) => void; // Updated to reflect service ID
+  serviceData?: any[]; // Updated prop name
   onDelete: (id: string) => void;
   onEdit: (service: any) => void;
+  onAddServiceToggle: () => void; // Updated to reflect service addition
 };
 
 const Seperate_ServicePagePreview = ({ 
@@ -18,13 +18,15 @@ const Seperate_ServicePagePreview = ({
   setServiceId,
   serviceData,
   onDelete,
-  onEdit
-}: ServicePagePreviewProps) => {
+  onEdit,
+  onAddServiceToggle // Pass the toggle function
+}: ServiceProvidedPagePreviewProps) => {
   const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState<number | null>(null);
+  const [isAddServiceOpen, setIsAddServiceOpen] = useState(false); // State to manage Add Service form visibility
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -59,15 +61,30 @@ const Seperate_ServicePagePreview = ({
     }
   };
 
+  const handleAddServiceSubmit = (newService: any) => {
+    setServices([...services, newService]); // Add the new service to the list
+    setIsAddServiceOpen(false); // Close the Add Service form
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <>
+    <div className="max-w-5xl mx-auto pb-6 mt-2 bg-white border rounded-lg shadow-lg p-10 ">
+      <div className="flex border-b mb-8 mt-4 justify-between items-center">
+        <h1 className="text-2xl text-gray-700 font-bold mb-4">Services Provided Preview</h1>
+        <button 
+          className="flex items-center bg-[#609641] text-white mb-4 px-2 py-1 rounded-md hover:bg-[#609641] transition duration-200"
+          onClick={onAddServiceToggle} // Use the passed toggle function
+        >
+          <FaPlus className="mr-2" /> Add Service
+        </button>
+      </div>
+
       <div className="grid gap-4">
         {services.map((service, index) => (
-          <div key={service.id} className="flex p-4 border rounded-md bg-white shadow-md">
+          <div key={service.id} className="flex p-4 border rounded-md bg-white shadow-md dark:bg-gray-dark dark:shadow-card hover:shadow-lg transition-shadow duration-300">
             <div className="flex-shrink-0">
               {service.why_content_image ? (
                 <Image
@@ -75,6 +92,7 @@ const Seperate_ServicePagePreview = ({
                   alt={service.title}
                   width={150}
                   height={100}
+                  style={{ width: "150px", height: "100px" }} // Maintain aspect ratio
                   className="rounded-md"
                 />
               ) : (
@@ -87,7 +105,10 @@ const Seperate_ServicePagePreview = ({
               <h2 className="text-xl font-bold">{service.title}</h2>
               <p className="text-gray-700">{service.heading}</p>
               <p className="text-gray-700">{service.content}</p>
-              <p className="text-gray-500">Significance: {service.significance}</p>
+              <p className="text-gray-700">{service.significance}</p>
+              <p className="text-gray-700">{service.plan_of_action}</p>
+              <p className="text-gray-700">{service.significance_title}</p>
+              <p className="text-gray-700">{service.plan_of_action_title}</p>
             </div>
             <div className="relative">
               <button className="text-gray-500 hover:text-gray-700 focus:outline-none hover:bg-gray-200 rounded-md p-2" onClick={() => setDropdownOpenIndex(dropdownOpenIndex === index ? null : index)}>
@@ -133,7 +154,7 @@ const Seperate_ServicePagePreview = ({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

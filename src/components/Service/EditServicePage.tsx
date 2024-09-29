@@ -88,7 +88,7 @@ const EditServicePage = ({
             if (images[field]) {
                 const uniqueFileName = `${Date.now()}_${images[field].name}`; // Append timestamp for uniqueness
                 const { data, error } = await supabase.storage
-                    .from('service-images') // Updated storage name
+                    .from('blog-images') // Updated storage name
                     .upload(`public/${uniqueFileName}`, images[field]);
 
                 if (error) {
@@ -97,7 +97,7 @@ const EditServicePage = ({
                 }
 
                 const { data: publicData } = supabase.storage
-                    .from('service-images') // Updated storage name
+                    .from('blog-images') // Updated storage name
                     .getPublicUrl(data.path);
                 const publicURL = publicData.publicUrl;
 

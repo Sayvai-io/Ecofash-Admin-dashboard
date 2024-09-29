@@ -1,167 +1,281 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createClient } from '@supabase/supabase-js';
-import { useRouter } from 'next/router'; // Import useRouter
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'; // Import left arrow icon
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft, faFileUpload } from '@fortawesome/free-solid-svg-icons';
+import Image from 'next/image';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-type EditSeperateServicePageProps = {
+type EditServiceProvidedPageProps = {
   setIsEditService: (isEdit: boolean) => void; // Function to set edit state
   serviceId: string; // ID of the service to edit
+  setServiceData: (data: any) => void; // This should be a function
 };
 
-const EditSeperateServicePage = ({ 
+const EditSeperate_ServicePage = ({ 
   setIsEditService, 
-  serviceId 
-}: EditSeperateServicePageProps) => {
-  const [serviceData, setServiceData] = useState<any>(null); // Initialize serviceData as null
-  const [editService, setEditService] = useState<any>(null); // State for the service being edited
-  const [isDirty, setIsDirty] = useState(false); // Track if the form is dirty
+  serviceId,
+  setServiceData = () => {} // Default to a no-op function
+}: EditServiceProvidedPageProps) => {
+  const [serviceData, setServiceDataLocal] = useState<any>(null);
+  const [editService, setEditService] = useState<any>({
+    title: '',
+    heading: '',
+    content: '',
+    significance: '',
+    plan_of_action: '',
+    why_content_image: '',
+    significance_title: '',
+    plan_of_action_title: '',
+  });
+  const [isDirty, setIsDirty] = useState(false);
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageUploadActive, setImageUploadActive] = useState<{ [key: string]: boolean }>({
+    why_content_image: false,
+  });
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchServiceData = async () => {
       const { data, error } = await supabase
-        .from('seperate_service') // Fetch from the seperate_service table
+        .from('seperate_service') // Updated table name
         .select('*')
-        .eq('id', serviceId) // Fetch the specific service by ID
-        .single(); // Get a single record
+        .eq('id', serviceId)
+        .single();
 
       if (error) {
         console.error('Error fetching service data:', error);
         return;
       }
 
-      setServiceData(data); // Set the fetched data
-      setEditService(data); // Set the service for editing
+      setServiceDataLocal(data);
+      setEditService(data);
+      setImagePreview(data.why_content_image); // Updated field name
     };
 
-    fetchServiceData(); // Call the fetch function
-  }, [serviceId]); // Run effect when serviceId changes
+    fetchServiceData();
+  }, [serviceId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setEditService({ ...editService, [e.target.name]: e.target.value }); // Update the editService state
-    setIsDirty(true); // Mark the form as dirty
+    setEditService({ ...editService, [e.target.name]: e.target.value });
+    setIsDirty(true);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setImage(file);
+      setImagePreview(URL.createObjectURL(file));
+      setIsDirty(true);
+      setImageUploadActive({ ...imageUploadActive, why_content_image: true }); // Activate upload button
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImage(null);
+    setImagePreview(null);
+    setEditService({ ...editService, why_content_image: null }); // Updated field name
+    setIsDirty(true);
+    setImageUploadActive({ ...imageUploadActive, why_content_image: false }); // Deactivate upload button
   };
 
   const handleUpdate = async () => {
+    // Check if setServiceData is a function
+    if (typeof setServiceData !== 'function') {
+        console.error('setServiceData is not a function');
+        return;
+    }
+
+    let updatedService = { ...editService };
+    let imageUrl = editService.why_content_image; // Default to existing image
+
+    if (image) {
+      const uniqueFileName = `${Date.now()}_${image.name}`; // Append timestamp for uniqueness
+      const { data, error } = await supabase.storage
+        .from('blog-images') // Updated storage bucket name
+        .upload(`public/${uniqueFileName}`, image);
+
+      if (error) {
+        if (error.message === "The resource already exists") {
+          console.error('Image already exists. Please choose a different image.');
+          return; // Handle the duplicate error
+        }
+        console.error('Error uploading image:', error);
+        return;
+      }
+
+      const { data: publicData } = supabase.storage
+        .from('blog-images') // Updated storage bucket name
+        .getPublicUrl(data.path);
+      imageUrl = publicData.publicUrl; // Update imageUrl to new image URL
+    } else if (editService.why_content_image === null) {
+      // If the image was removed, set imageUrl to null
+      imageUrl = null;
+    }
+
+   updatedService.why_content_image = imageUrl; // Update the bg_image in the updatedService object
+
     const { error } = await supabase
-      .from('seperate_service') // Update the seperate_service table
-      .update(editService) // Update the service in Supabase
-      .eq('id', editService.id); // Match by ID
+      .from('seperate_service') // Updated table name
+      .update(updatedService)
+      .eq('id', serviceId); // Ensure you are using serviceId here
 
     if (error) {
       console.error('Error updating service:', error);
     } else {
+      setServiceData((prevData: any) => 
+        prevData.map((service: any) => service.id === updatedService.id ? updatedService : service)
+      ); // Update local state
       setIsEditService(false); // Exit edit mode
     }
   };
 
   const handleCancel = () => {
-    setIsEditService(false); // Exit edit mode
+    setIsEditService(false);
   };
 
   const handleBack = () => {
-    setIsEditService(false); // Navigate back to the previous state
+    setIsEditService(false);
   };
 
-  if (!serviceData) return <div>Loading...</div>; // Show loading state
+  if (!serviceData) return <div>Loading...</div>;
 
   return (
-    <div>
-      <button onClick={handleBack} className="top-4 left-4 flex items-center w-20 px-4 py-2 bg-gray-500 text-white rounded"> {/* Back button */}
-        <FontAwesomeIcon icon={faArrowLeft} className="mr-2" /> {/* Left arrow icon */}
-        Back
-      </button>
-      {editService && ( // Display the form for the service
-        <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }} className="px-30"> {/* Add padding left and right */}
-          <div className="mb-4"> {/* Title Input */}
-            <label className="block mb-1">Title</label>
+    <div className="bg-white border rounded-lg shadow-lg p-6"> {/* Added classes for styling */}
+      <div className="flex items-center gap-8 border-b pt-4 pb-4 mb-4"> {/* Added flex container with gap */}
+        <button onClick={handleBack} className="flex items-center mb-2 w-8 px-2 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-white"> 
+          <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
+        </button>
+        <h1 className="text-black text-2xl font-bold mb-2">Edit Service Provided</h1> {/* Updated heading */}
+      </div>
+      {editService && (
+        <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }} className="px-20">
+          <div className="mb-4">
+            <label className="block mb-2 text-gray-500 font-semibold">Title</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
               name="title" 
-              value={editService.title} 
+              value={editService.title} // Updated field name
               onChange={handleChange} 
               required
-            /> {/* Title input */}
+            />
           </div>
-          <div className="mb-4"> {/* Heading Input */}
-            <label className="block mb-1">Heading</label>
+          <div className="mb-4">
+            <label className="block mb-2 text-gray-500 font-semibold">Heading</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
               name="heading" 
-              value={editService.heading} 
+              value={editService.heading} // New field
               onChange={handleChange} 
               required
-            /> {/* Heading input */}
+            />
           </div>
-          <div className="mb-4"> {/* Content Input */}
-            <label className="block mb-1">Content</label>
+          <div className="mb-4">
+            <label className="block mb-2 text-gray-500 font-semibold">Content</label>
             <textarea 
               className="w-full px-4 py-2 border rounded" 
               name="content" 
-              value={editService.content} 
+              value={editService.content} // Updated field name
               onChange={handleChange} 
               required
-            /> {/* Content input */}
+            />
           </div>
-          <div className="mb-4"> {/* Significance Input */}
-            <label className="block mb-1">Significance</label>
-            <textarea 
-              className="w-full px-4 py-2 border rounded" 
-              name="significance" 
-              value={editService.significance} 
-              onChange={handleChange} 
-              required
-            /> {/* Significance input */}
-          </div>
-          <div className="mb-4"> {/* Plan of Action Input */}
-            <label className="block mb-1">Plan of Action</label>
-            <textarea 
-              className="w-full px-4 py-2 border rounded" 
-              name="plan_of_action" 
-              value={editService.plan_of_action} 
-              onChange={handleChange} 
-              required
-            /> {/* Plan of Action input */}
-          </div>
-          <div className="mb-4"> {/* Why Content Image Input */}
-            <label className="block mb-1">Why Content Image URL</label>
+          <div className="mb-4">
+            <label className="block mb-2 text-gray-500 font-semibold">Significance</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
-              name="why_content_image" 
-              value={editService.why_content_image} 
+              name="significance" 
+              value={editService.significance} // New field
               onChange={handleChange} 
-            /> {/* Why Content Image input */}
+              required
+            />
           </div>
-          <div className="mb-4"> {/* Significance Title Input */}
-            <label className="block mb-1">Significance Title</label>
+          <div className="mb-4">
+            <label className="block mb-2 text-gray-500 font-semibold">Plan of Action</label>
+            <input 
+              className="w-full px-4 py-2 border rounded" 
+              name="plan_of_action" 
+              value={editService.plan_of_action} // New field
+              onChange={handleChange} 
+              required
+            />
+          </div>
+          <div className="mb-4"> {/* Background Image Display */}
+            <label className="block mb-2 text-gray-500 font-semibold">Why Content Image</label>
+            {imagePreview ? ( // Check if the image preview exists
+              <div className="mb-2">
+                <Image 
+                  src={imagePreview} 
+                  alt="why_content_image" 
+                  width={300} 
+                  height={200} 
+                  style={{ width: "300px", height: "200px" }} // Maintain aspect ratio
+                  className="rounded-md mb-4" 
+                />
+                <div className="flex gap-2 mt-2"> {/* Flex container for icons */}
+                  <button 
+                    type="button" 
+                    onClick={handleRemoveImage} 
+                    className="flex items-center px-2 py-1 bg-red-500 text-white rounded"
+                  >
+                   Replace Image {/* Button text */}
+                  </button>
+                </div>
+              </div>
+            ) : ( // No image box
+              <div 
+                className={`w-[300px] h-[200px] bg-gray-200 rounded-md flex items-center justify-center mb-2 cursor-pointer`} 
+                onClick={() => fileInputRef.current?.click()} // Clickable area
+              >
+                <span className="text-gray-700">Upload Image</span>
+                <button 
+                  type="button" 
+                  className="flex items-center px-3 py-2 text-gray-700 rounded ml-2" // Added margin-left for spacing
+                >
+                  <FontAwesomeIcon icon={faFileUpload} /> {/* File upload icon without margin */}
+                </button>
+              </div>
+            )}
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={handleImageChange} 
+              ref={fileInputRef} 
+              className="hidden" 
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2 text-gray-500 font-semibold">Significance Title</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
               name="significance_title" 
-              value={editService.significance_title} 
+              value={editService.significance_title} // New field
               onChange={handleChange} 
-            /> {/* Significance Title input */}
+              required
+            />
           </div>
-          <div className="mb-4"> {/* Plan of Action Title Input */}
-            <label className="block mb-1">Plan of Action Title</label>
+          <div className="mb-4">
+            <label className="block mb-2 text-gray-500 font-semibold">Plan of Action Title</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
               name="plan_of_action_title" 
-              value={editService.plan_of_action_title} 
+              value={editService.plan_of_action_title} // New field
               onChange={handleChange} 
-            /> {/* Plan of Action Title input */}
+              required
+            />
           </div>
-          <button type="button" onClick={handleCancel} className="w-20 px-4 py-2 bg-gray-500 text-white rounded">Cancel</button> {/* Cancel button */}
-          <button type="submit" className={`w-20 px-4 py-2 bg-blue-500 text-white rounded ${!isDirty ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={!isDirty}>Update</button> {/* Update button */}
+          
+          <button type="submit" className={`w-20 px-4 py-2 bg-[#609641] text-white rounded ${!isDirty ? 'opacity-50 cursor-not-allowed' : ''} mt-4 mb-8`} disabled={!isDirty}>Update</button> {/* Update button */}
+          <button type="button" onClick={handleCancel} className="w-20 px-4 py-2 bg-gray-500 text-white rounded mt-4 mb-8">Cancel</button>
         </form>
       )}
     </div>
-  ); // Only display the form when editing
+  );
 };
 
-export default EditSeperateServicePage;
+export default EditSeperate_ServicePage;

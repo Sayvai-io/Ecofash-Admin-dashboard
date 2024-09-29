@@ -2,28 +2,31 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import supabase from "@/utils/supabaseClient";
-import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEllipsisV, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 
 type ServiceProvidedPagePreviewProps = {
   setIsEditService: (isEdit: boolean) => void;
-  setServiceId: (id: any) => void;
-  serviceData?: any[];
+  setServiceId: (id: any) => void; // Updated to reflect service ID
+  serviceData?: any[]; // Updated prop name
   onDelete: (id: string) => void;
   onEdit: (service: any) => void;
+  onAddServiceToggle: () => void; // Updated to reflect service addition
 };
 
-const ServiceProvidedPagePreview = ({ 
+const Service_ProvidedPagePreview = ({ 
   setIsEditService,
   setServiceId,
   serviceData,
   onDelete,
-  onEdit
+  onEdit,
+  onAddServiceToggle // Pass the toggle function
 }: ServiceProvidedPagePreviewProps) => {
   const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState<number | null>(null);
+  const [isAddServiceOpen, setIsAddServiceOpen] = useState(false); // State to manage Add Service form visibility
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -58,15 +61,30 @@ const ServiceProvidedPagePreview = ({
     }
   };
 
+  const handleAddServiceSubmit = (newService: any) => {
+    setServices([...services, newService]); // Add the new service to the list
+    setIsAddServiceOpen(false); // Close the Add Service form
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <>
+    <div className="max-w-5xl mx-auto pb-6 mt-2 bg-white border rounded-lg shadow-lg p-10 ">
+      <div className="flex border-b mb-8 mt-4 justify-between items-center">
+        <h1 className="text-2xl text-gray-700 font-bold mb-4">Services Provided Preview</h1>
+        <button 
+          className="flex items-center bg-[#609641] text-white mb-4 px-2 py-1 rounded-md hover:bg-[#609641] transition duration-200"
+          onClick={onAddServiceToggle} // Use the passed toggle function
+        >
+          <FaPlus className="mr-2" /> Add Service
+        </button>
+      </div>
+
       <div className="grid gap-4">
         {services.map((service, index) => (
-          <div key={service.id} className="flex p-4 border rounded-md bg-white shadow-md">
+          <div key={service.id} className="flex p-4 border rounded-md bg-white shadow-md dark:bg-gray-dark dark:shadow-card hover:shadow-lg transition-shadow duration-300">
             <div className="flex-shrink-0">
               {service.bg_image ? (
                 <Image
@@ -74,6 +92,7 @@ const ServiceProvidedPagePreview = ({
                   alt={service.title}
                   width={150}
                   height={100}
+                  style={{ width: "150px", height: "100px" }} // Maintain aspect ratio
                   className="rounded-md"
                 />
               ) : (
@@ -130,8 +149,8 @@ const ServiceProvidedPagePreview = ({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
-export default ServiceProvidedPagePreview;
+export default Service_ProvidedPagePreview;

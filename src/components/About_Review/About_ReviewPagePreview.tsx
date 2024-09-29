@@ -73,11 +73,12 @@ const About_ReviewPagePreview = ({
   }
 
   return (
-    <>
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Reviews</h1>
+    
+    <div className="max-w-5xl mx-auto pb-6 mt-2 bg-white border rounded-lg shadow-lg p-10 "> {/* Adjusted mt-20 for margin-top */}
+      <div className="flex border-b mb-8 mt-4 justify-between items-center">
+        <h1 className="text-2xl text-gray-700 font-bold mb-4">Reviews Preview</h1>
         <button 
-          className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200"
+          className="flex items-center bg-[#609641] text-white mb-4 px-2 py-1 rounded-md hover:bg-[#609641] transition duration-200"
           onClick={onAddReviewToggle} // Use the passed toggle function
         >
           <FaPlus className="mr-2" /> Add Review
@@ -87,7 +88,7 @@ const About_ReviewPagePreview = ({
     
       <div className="grid gap-4">
         {reviews.map((review, index) => (
-          <div key={review.id} className="flex p-4 border rounded-md bg-white shadow-md dark:bg-gray-dark dark:shadow-card">
+          <div key={review.id} className="flex p-4 border rounded-md bg-white shadow-md dark:bg-gray-dark dark:shadow-card hover:shadow-lg transition-shadow duration-300">
             <div className="flex-shrink-0">
               {review.profile_image ? (
                 <Image
@@ -153,7 +154,7 @@ const About_ReviewPagePreview = ({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
