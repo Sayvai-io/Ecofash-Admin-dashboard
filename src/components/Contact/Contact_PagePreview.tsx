@@ -10,7 +10,7 @@ type ContactPagePreviewProps = { // Updated type name
     onEdit: (contact: any) => void; // Changed function name
 };
 
-const ContactPagePreview = ({ 
+const Contact_PagePreview = ({ 
     setIsEditContact, 
     setContactData,
     contactData = [], // Changed prop name
@@ -124,4 +124,4 @@ const ContactPagePreview = ({
     );
 };
 
-export default ContactPagePreview; // Updated export
+export default Contact_PagePreview; // Updated export
