@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaEllipsisV, FaEdit, FaTrash } from "react-icons/fa"; // Import icons
 import Image from 'next/image'; // Import Image for displaying images
+import DOMPurify from 'dompurify';
 
 type HomePagePreviewProps = { // Updated type name
     setIsEditHome: (isEdit: boolean) => void; // Changed function name
@@ -33,6 +34,12 @@ const HomePagePreview = ({
         setHomeData(home); // Pass the selected home data for editing
     };
 
+    const sanitizeHTML = (html: string) => {
+        return {
+            __html: DOMPurify.sanitize(html)
+        };
+    };
+    
     return (
         <div className="max-w-5xl mx-auto pb-6 mt-2 bg-white border rounded-lg shadow-lg p-10 "> {/* Adjusted mt-20 for margin-top */}
             {homeData.length === 0 ? (
@@ -55,8 +62,8 @@ const HomePagePreview = ({
                                     className="rounded-md mb-10" 
                                 />
                             )}
-                            <h3 className="text-2xl text-gray-700 font-semibold mb-4">{home.heading}</h3> {/* Heading */}
-                            <h3 className="text-lg text-gray-700 mb-4">{home.head_content}</h3> {/* Heading */}
+                            <h3 className="text-2xl text-gray-700 font-semibold mb-4" dangerouslySetInnerHTML={sanitizeHTML(home.heading)}></h3> {/* Heading */}
+                            <h3 className="text-lg text-gray-700 mb-4" dangerouslySetInnerHTML={sanitizeHTML(home.head_content)}></h3> {/* Heading */}
                             {home.head_image && ( // Display Head image if it exists
                                 <Image 
                                     src={home.head_image} 
@@ -66,9 +73,9 @@ const HomePagePreview = ({
                                     className="rounded-md mb-10" 
                                 />
                             )}
-                            <p className="text-gray-700 text-lg mb-1">{home.about_title}</p> {/* About title */}
-                            <p className="text-gray-700 font-semibold text-xl mb-2">{home.about_heading}</p> {/* About heading */}
-                            <p className="text-gray-700 mr-50 mb-4">{home.about_content}</p> {/* About content */}
+                            <p className="text-gray-700 text-lg mb-1" dangerouslySetInnerHTML={sanitizeHTML(home.about_title)}></p> {/* About title */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2" dangerouslySetInnerHTML={sanitizeHTML(home.about_heading)}></p> {/* About heading */}
+                            <p className="text-gray-700 mr-50 mb-4"  dangerouslySetInnerHTML={sanitizeHTML(home.about_content)}></p> {/* About content */}
                             {home.about_image && ( // Display About image if it exists
                                 <Image 
                                     src={home.about_image} 
@@ -87,8 +94,8 @@ const HomePagePreview = ({
                                     className="rounded-md mb-10" 
                                 />
                             )}
-                            <p className="text-gray-700 mb-1">{home.contact_heading}</p> {/* Contact heading */}
-                            <p className="text-gray-700 font-semibold text-lg mb-2">{home.contact_content}</p> {/* Contact content */}
+                            <p className="text-gray-700 mb-1" dangerouslySetInnerHTML={sanitizeHTML(home.contact_heading)}></p> {/* Contact heading */}
+                            <p className="text-gray-700 font-semibold text-lg mb-2" dangerouslySetInnerHTML={sanitizeHTML(home.contact_content)}></p> {/* Contact content */}
                             {home.contact_image && ( // Display Contact image if it exists
                                 <Image 
                                     src={home.contact_image} 

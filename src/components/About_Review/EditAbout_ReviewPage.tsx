@@ -4,6 +4,11 @@ import { createClient } from '@supabase/supabase-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faFileUpload } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
+
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -51,6 +56,11 @@ const EditAboutReviewPage = ({
 
     fetchReviewData();
   }, [reviewId]);
+
+  const handleQuillChange = (value: string, field: string) => {
+    setEditReview((prevEditReview: any) => ({ ...prevEditReview, [field]: value })); // Specify type for prevEditAbout
+    setIsDirty(true);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setEditReview({ ...editReview, [e.target.name]: e.target.value });
@@ -148,22 +158,22 @@ const EditAboutReviewPage = ({
         <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }} className="px-20">
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Name</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="name" 
-              value={editReview.name} 
-              onChange={handleChange} 
-              required
+            <ReactQuill
+              value={editReview.name}
+              onChange={(content) =>
+                handleQuillChange(content, "name")
+              }
+              
             />
           </div>
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Designation</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="designation" 
-              value={editReview.designation} 
-              onChange={handleChange} 
-              required
+            <ReactQuill
+              value={editReview.designation}
+              onChange={(content) =>
+                handleQuillChange(content, "designation")
+              }
+              
             />
           </div>
           <div className="mb-4"> {/* About Image Display */}
@@ -211,12 +221,12 @@ const EditAboutReviewPage = ({
           </div>
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Comments</label>
-            <textarea 
-              className="w-full px-4 py-2 border rounded" 
-              name="comments" 
-              value={editReview.comments} 
-              onChange={handleChange} 
-              required
+            <ReactQuill
+              value={editReview.comments}
+              onChange={(content) =>
+                handleQuillChange(content, "comments")
+              }
+              
             />
           </div>
           <div className="mb-4">

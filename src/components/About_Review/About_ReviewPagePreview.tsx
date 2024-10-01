@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import supabase from "@/utils/supabaseClient";
 import { FaEllipsisV, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import DOMPurify from 'dompurify';
 
 type ReviewPagePreview = {
   setIsEditReview: (isEdit: boolean) => void;
@@ -68,6 +69,12 @@ const About_ReviewPagePreview = ({
     setIsAddReviewOpen(false); // Close the Add Review form
   };
 
+  const sanitizeHTML = (html: string) => {
+    return {
+        __html: DOMPurify.sanitize(html)
+    };
+};
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -105,9 +112,9 @@ const About_ReviewPagePreview = ({
               )}
             </div>
             <div className="ml-4 flex-grow">
-              <h2 className="text-xl text-gray-700 font-semibold">{review.name}</h2>
-              <p className="text-gray-700 font-semibold">{review.designation}</p>
-              <p className="text-gray-700">{review.comments}</p>
+              <h2 className="text-xl text-gray-700 font-semibold" dangerouslySetInnerHTML={sanitizeHTML(review.name)}></h2>
+              <p className="text-gray-700 font-semibold" dangerouslySetInnerHTML={sanitizeHTML(review.designation)}></p>
+              <p className="text-gray-700" dangerouslySetInnerHTML={sanitizeHTML(review.comments)}></p>
               <p className="text-gray-700">Rating: {review.rating}</p>
             </div>
             <div className="relative">
