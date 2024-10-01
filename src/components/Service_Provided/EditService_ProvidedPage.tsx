@@ -4,6 +4,10 @@ import { createClient } from '@supabase/supabase-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faFileUpload } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -51,6 +55,11 @@ const EditService_ProvidedPage = ({
 
     fetchServiceData();
   }, [serviceId]);
+
+  const handleQuillChange = (value: string, field: string) => {
+    setEditService((prevEditService: any) => ({ ...prevEditService, [field]: value })); // Specify type for prevEditAbout
+    setIsDirty(true);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setEditService({ ...editService, [e.target.name]: e.target.value });
@@ -148,22 +157,21 @@ const EditService_ProvidedPage = ({
         <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }} className="px-20">
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Title</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="title" 
-              value={editService.title} // Updated field name
-              onChange={handleChange} 
-              required
+            <ReactQuill
+              value={editService.title}
+              onChange={(content) =>
+                handleQuillChange(content, "title")
+              }
             />
           </div>
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Content</label>
-            <textarea 
-              className="w-full px-4 py-2 border rounded" 
-              name="content" 
-              value={editService.content} // Updated field name
-              onChange={handleChange} 
-              required
+            <ReactQuill
+              value={editService.content}
+              onChange={(content) =>
+                handleQuillChange(content, "content")
+              }
+              
             />
           </div>
           <div className="mb-4"> {/* Background Image Display */}

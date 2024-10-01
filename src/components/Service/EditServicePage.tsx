@@ -4,6 +4,11 @@ import { createClient } from '@supabase/supabase-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
+
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -53,6 +58,11 @@ const EditServicePage = ({
 
     fetchServiceData();
   }, []);
+
+  const handleQuillChange = (value: string, field: string) => {
+    setEditService((prevEditService: any) => ({ ...prevEditService, [field]: value })); // Specify type for prevEditAbout
+    setIsDirty(true);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setEditService({ ...editService, [e.target.name]: e.target.value });
@@ -142,22 +152,24 @@ const EditServicePage = ({
           {/* Service Heading Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Service Heading</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="service_heading" 
-              value={editService.service_heading} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editService.service_heading}
+              onChange={(content) =>
+                handleQuillChange(content, "service_heading")
+              }
+              
             />
           </div>
 
           {/* Service Content Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Service Content</label>
-            <textarea 
-              className="w-full px-4 py-2 border rounded" 
-              name="service_content" 
-              value={editService.service_content} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editService.service_content}
+              onChange={(content) =>
+                handleQuillChange(content, "service_content")
+              }
+              
             />
           </div>
 
@@ -201,11 +213,12 @@ const EditServicePage = ({
           {/* Years of Experience Title Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Years of Experience Title</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="years_of_experience_title" 
-              value={editService.years_of_experience_title} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editService.years_of_experience_title}
+              onChange={(content) =>
+                handleQuillChange(content, "years_of_experience_title")
+              }
+              
             />
           </div>
 
@@ -223,11 +236,12 @@ const EditServicePage = ({
           {/* Satisfied Clients Title Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Satisfied Clients Title</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="satisfied_clients_title" 
-              value={editService.satisfied_clients_title} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editService.satisfied_clients_title}
+              onChange={(content) =>
+                handleQuillChange(content, "satisfied_clients_title")
+              }
+              
             />
           </div>
 
@@ -245,11 +259,12 @@ const EditServicePage = ({
           {/* Services Provided Title Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Services Provided Title</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="services_provided_title" 
-              value={editService.services_provided_title} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editService.services_provided_title}
+              onChange={(content) =>
+                handleQuillChange(content, "services_provided_title")
+              }
+              
             />
           </div>
 
@@ -267,11 +282,12 @@ const EditServicePage = ({
           {/* Business Portfolios Title Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Business Portfolios Title</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="business_portfolios_title" 
-              value={editService.business_portfolios_title} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editService.business_portfolios_title}
+              onChange={(content) =>
+                handleQuillChange(content, "business_portfolios_title")
+              }
+              
             />
           </div>
 
@@ -289,22 +305,24 @@ const EditServicePage = ({
           {/* Collection Heading Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Collection Heading</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="collection_heading" 
-              value={editService.collection_heading} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editService.collection_heading}
+              onChange={(content) =>
+                handleQuillChange(content, "collection_heading")
+              }
+              
             />
           </div>
 
           {/* Collection Content Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Collection Content</label>
-            <textarea 
-              className="w-full px-4 py-2 border rounded" 
-              name="collection_content" 
-              value={editService.collection_content} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editService.collection_content}
+              onChange={(content) =>
+                handleQuillChange(content, "collection_content")
+              }
+              
             />
           </div>
 
@@ -348,11 +366,12 @@ const EditServicePage = ({
           {/* Service Provided Heading Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Service Provided Heading</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="service_provided_heading" 
-              value={editService.service_provided_heading} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editService.service_provided_heading}
+              onChange={(content) =>
+                handleQuillChange(content, "service_provided_heading")
+              }
+              
             />
           </div>
 

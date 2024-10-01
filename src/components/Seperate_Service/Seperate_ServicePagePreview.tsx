@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import supabase from "@/utils/supabaseClient";
 import { FaEllipsisV, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import DOMPurify from 'dompurify';
 
 type ServiceProvidedPagePreviewProps = {
   setIsEditService: (isEdit: boolean) => void;
@@ -66,6 +67,12 @@ const Seperate_ServicePagePreview = ({
     setIsAddServiceOpen(false); // Close the Add Service form
   };
 
+  const sanitizeHTML = (html: string) => {
+    return {
+        __html: DOMPurify.sanitize(html)
+    };
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -102,13 +109,13 @@ const Seperate_ServicePagePreview = ({
               )}
             </div>
             <div className="ml-4 flex-grow">
-              <h2 className="text-xl font-bold">{service.title}</h2>
-              <p className="text-gray-700">{service.heading}</p>
-              <p className="text-gray-700">{service.content}</p>
-              <p className="text-gray-700">{service.significance}</p>
-              <p className="text-gray-700">{service.plan_of_action}</p>
-              <p className="text-gray-700">{service.significance_title}</p>
-              <p className="text-gray-700">{service.plan_of_action_title}</p>
+              <h2 className="text-xl font-bold" dangerouslySetInnerHTML={sanitizeHTML(service.service_heading)}></h2>
+              <p className="text-gray-700" dangerouslySetInnerHTML={sanitizeHTML(service.heading)}></p>
+              <p className="text-gray-700" dangerouslySetInnerHTML={sanitizeHTML(service.content)}></p>
+              <p className="text-gray-700" dangerouslySetInnerHTML={sanitizeHTML(service.significance)}></p>
+              <p className="text-gray-700" dangerouslySetInnerHTML={sanitizeHTML(service.plan_of_action)}></p>
+              <p className="text-gray-700" dangerouslySetInnerHTML={sanitizeHTML(service.significance_title)}></p>
+              <p className="text-gray-700" dangerouslySetInnerHTML={sanitizeHTML(service.plan_of_action_title)}></p>
             </div>
             <div className="relative">
               <button className="text-gray-500 hover:text-gray-700 focus:outline-none hover:bg-gray-200 rounded-md p-2" onClick={() => setDropdownOpenIndex(dropdownOpenIndex === index ? null : index)}>

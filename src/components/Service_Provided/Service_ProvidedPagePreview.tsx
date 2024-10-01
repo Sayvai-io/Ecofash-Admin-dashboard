@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import supabase from "@/utils/supabaseClient";
 import { FaEllipsisV, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import DOMPurify from 'dompurify';
 
 type ServiceProvidedPagePreviewProps = {
   setIsEditService: (isEdit: boolean) => void;
@@ -66,6 +67,12 @@ const Service_ProvidedPagePreview = ({
     setIsAddServiceOpen(false); // Close the Add Service form
   };
 
+  const sanitizeHTML = (html: string) => {
+    return {
+        __html: DOMPurify.sanitize(html)
+    };
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -102,8 +109,8 @@ const Service_ProvidedPagePreview = ({
               )}
             </div>
             <div className="ml-4 flex-grow">
-              <h2 className="text-xl font-bold">{service.title}</h2>
-              <p className="text-gray-700">{service.content}</p>
+              <h2 className="text-xl font-bold" dangerouslySetInnerHTML={sanitizeHTML(service.title)}></h2>
+              <p className="text-gray-700" dangerouslySetInnerHTML={sanitizeHTML(service.content)}></p>
             </div>
             <div className="relative">
               <button className="text-gray-500 hover:text-gray-700 focus:outline-none hover:bg-gray-200 rounded-md p-2" onClick={() => setDropdownOpenIndex(dropdownOpenIndex === index ? null : index)}>
@@ -111,17 +118,15 @@ const Service_ProvidedPagePreview = ({
               </button>
               <div className={`absolute right-0 mt-2 w-34 bg-gray-100 border rounded-md shadow-lg z-10 ${dropdownOpenIndex === index ? 'block' : 'hidden'}`}>
                 <ul className="py-1">
-                  <li className="px-3 py-1 text-gray-700 hover:bg-gray-200 cursor-pointer flex">
-                    <button
-                      className="flex items-center"
-                      onClick={() => {
-                        setDropdownOpenIndex(null);
-                        setServiceId(service.id);
-                        setIsEditService(true);
-                      }}
-                    >
+                  <li className="px-3 py-1 text-gray-700 hover:bg-gray-200 cursor-pointer flex"
+                   onClick={() => {
+                    setDropdownOpenIndex(null);
+                    setServiceId(service.id);
+                    setIsEditService(true);
+                  }}>
+                    
                       <FaEdit className="mr-2" /> <span>Edit</span>
-                    </button>
+                   
                   </li>
                   <li className="px-3 py-2 text-gray-700 hover:text-red-500 hover:bg-gray-200 cursor-pointer flex"
                     onClick={() => {
