@@ -250,32 +250,34 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
               className="hidden"
             />
           </div>
+          
           <div className="mb-4">
             <label className="mb-2 block font-semibold text-gray-500">
               Heading
             </label>
-            <input
-              className="w-full rounded border px-4 py-2"
-              name="logo_heading" // Updated field name
-              value={editHome.logo_heading} // Updated state name
-              onChange={handleChange}
-            />{" "}
+            <ReactQuill
+              value={editHome.heading}
+              onChange={(content) =>
+                handleQuillChange(content, "heading")
+              }
+              
+            />
             {/* Heading input */}
           </div>
           <div className="mb-4">
             <label className="mb-2 block font-semibold text-gray-500">
               Heading Content
             </label>
-            <input
-              className="w-full rounded border px-4 py-2"
-              name="logo_content" // Updated field name
-              value={editHome.logo_content} // Updated state name
-              onChange={handleChange}
-            />{" "}
+            <ReactQuill
+              value={editHome.head_content}
+              onChange={(content) =>
+                handleQuillChange(content, "head_content")
+              }
+              
+            />
             {/* Heading input */}
           </div>
           <div className="mb-4">
-            {" "}
             {/* Head Image Display */}
             <label className="mb-2 block font-semibold text-gray-500">
               Head Image
@@ -335,12 +337,13 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
             <label className="mb-2 block font-semibold text-gray-500">
               About Title
             </label>
-            <input
-              className="w-full rounded border px-4 py-2"
-              name="about_title"
-              value={editHome.about_title} // Updated state name
-              onChange={handleChange}
-            />{" "}
+            <ReactQuill
+              value={editHome.about_title}
+              onChange={(content) =>
+                handleQuillChange(content, "about_title")
+              }
+              
+            />
             {/* About Title input */}
           </div>
           <div className="mb-4">
@@ -349,11 +352,12 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
             <label className="mb-2 block font-semibold text-gray-500">
               About Heading
             </label>
-            <input
-              className="w-full rounded border px-4 py-2"
-              name="about_heading"
-              value={editHome.about_heading} // Updated state name
-              onChange={handleChange}
+            <ReactQuill
+              value={editHome.about_heading}
+              onChange={(content) =>
+                handleQuillChange(content, "about_heading")
+              }
+              
             />{" "}
             {/* About Heading input */}
           </div>
@@ -368,7 +372,7 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
               onChange={(content) =>
                 handleQuillChange(content, "about_content")
               }
-              className="mb-12 h-64"
+              
             />{" "}
             {/* About Content input */}
           </div>
@@ -488,12 +492,13 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
             <label className="mb-2 block font-semibold text-gray-500">
               Contact Heading
             </label>
-            <input
-              className="w-full rounded border px-4 py-2"
-              name="contact_heading"
-              value={editHome.contact_heading} // Updated state name
-              onChange={handleChange}
-            />{" "}
+            <ReactQuill
+              value={editHome.contact_heading}
+              onChange={(content) =>
+                handleQuillChange(content, "contact_heading")
+              }
+              
+            />
             {/* Contact Heading input */}
           </div>
           <div className="mb-4">
@@ -502,12 +507,13 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
             <label className="mb-2 block font-semibold text-gray-500">
               Contact Content
             </label>
-            <textarea
-              className="w-full rounded border px-4 py-2"
-              name="contact_content"
-              value={editHome.contact_content} // Updated state name
-              onChange={handleChange}
-            />{" "}
+            <ReactQuill
+              value={editHome.contact_content}
+              onChange={(content) =>
+                handleQuillChange(content, "contact_content")
+              }
+              
+            />
             {/* Contact Content input */}
           </div>
           <div className="mb-4">

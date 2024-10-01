@@ -4,6 +4,10 @@ import { createClient } from '@supabase/supabase-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faTrashAlt, faFileUpload } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -65,6 +69,11 @@ const EditAboutPage = ({
 
     fetchAboutData();
   }, []);
+
+  const handleQuillChange = (value: string, field: string) => {
+    setEditAbout((prevEditAbout: any) => ({ ...prevEditAbout, [field]: value })); // Specify type for prevEditAbout
+    setIsDirty(true);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setEditAbout({ ...editAbout, [e.target.name]: e.target.value });
@@ -149,12 +158,13 @@ const EditAboutPage = ({
         <form onSubmit={(e) => { e.preventDefault(); handleUpdateAbout(); }} className="px-15">
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Title</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="title" 
-              value={editAbout.title} 
-              onChange={handleChange} 
-            /> {/* Title input */}
+            <ReactQuill
+              value={editAbout.title}
+              onChange={(content) =>
+                handleQuillChange(content, "title")
+              }
+              
+            />{/* Title input */}
           </div>
           
           <div className="mb-4"> {/* Background Image Display */}
@@ -252,39 +262,43 @@ const EditAboutPage = ({
           </div>
           <div className="mb-4"> {/* About Title Input */}
             <label className="block mb-2 text-gray-500 font-semibold">About Title</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="about_title" 
-              value={editAbout.about_title} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editAbout.about_title}
+              onChange={(content) =>
+                handleQuillChange(content, "about_title")
+              }
+              
             /> {/* About Title input */}
           </div>
           <div className="mb-4"> {/* About Heading Input */}
             <label className="block mb-2 text-gray-500 font-semibold">About Heading</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="about_heading" 
-              value={editAbout.about_heading} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editAbout.about_heading}
+              onChange={(content) =>
+                handleQuillChange(content, "about_heading")
+              }
+              
             /> {/* About Heading input */}
           </div>
           <div className="mb-4"> {/* About Content Input */}
             <label className="block mb-2 text-gray-500 font-semibold  ">About Content</label>
-            <textarea 
-              className="w-full px-4 py-2 border rounded" 
-              name="about_content" 
-              value={editAbout.about_content} 
-              onChange={handleChange} 
-            /> {/* About Content input */}
+            <ReactQuill
+              value={editAbout.about_content}
+              onChange={(content) =>
+                handleQuillChange(content, "about_content")
+              }
+              
+            />{/* About Content input */}
           </div>
           <div className="mb-4"> {/* MV Title Input */}
             <label className="block mb-2 text-gray-500 font-semibold  ">MV Title</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="mv_title" 
-              value={editAbout.mv_title} 
-              onChange={handleChange} 
-            /> {/* MV Title input */}
+            <ReactQuill
+              value={editAbout.mv_title}
+              onChange={(content) =>
+                handleQuillChange(content, "mv_title")
+              }
+              
+            />{/* MV Title input */}
           </div>
           <div className="mb-4"> {/* MV Heading Input */}
             <label className="block mb-2 text-gray-500 font-semibold">MV Image</label>
@@ -335,29 +349,32 @@ const EditAboutPage = ({
 
           <div className="mb-4"> {/* TC Title Input */}
             <label className="block mb-2 text-gray-500 font-semibold">TC Title</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="tc_title" 
-              value={editAbout.tc_title} 
-              onChange={handleChange} 
-            /> {/* TC Title input */}
+            <ReactQuill
+              value={editAbout.tc_title}
+              onChange={(content) =>
+                handleQuillChange(content, "tc_title")
+              }
+              
+            />{/* TC Title input */}
           </div>
           <div className="mb-4"> {/* TC Heading Input */}
             <label className="block mb-1">TC Heading</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="tc_heading" 
-              value={editAbout.tc_heading} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editAbout.tc_heading}
+              onChange={(content) =>
+                handleQuillChange(content, "tc_heading")
+              }
+              
             /> {/* TC Heading input */}
           </div>
           <div className="mb-4"> {/* TC Content Input */}
             <label className="block mb-2 text-gray-500 font-semibold">TC Content</label>
-            <textarea 
-              className="w-full px-4 py-2 border rounded" 
-              name="tc_content" 
-              value={editAbout.tc_content} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editAbout.tc_content}
+              onChange={(content) =>
+                handleQuillChange(content, "tc_content")
+              }
+              
             /> {/* TC Content input */}
           </div>
           
@@ -410,12 +427,13 @@ const EditAboutPage = ({
 
           <div className="mb-4  pb-4"> {/* Review Heading Input */}
             <label className="block mb-2 text-gray-500 font-semibold">Review Heading</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="review_heading" 
-              value={editAbout.review_heading} 
-              onChange={handleChange} 
-            /> {/* Review Heading input */}
+            <ReactQuill
+              value={editAbout.review_heading}
+              onChange={(content) =>
+                handleQuillChange(content, "review_heading")
+              }
+              
+            />{/* Review Heading input */}
           </div>
           <button type="submit" className={`w-20 px-4 py-2 bg-[#609641] text-white rounded ${!isDirty ? 'opacity-50 cursor-not-allowed' : ''} mt-4 mb-8`} disabled={!isDirty}>Update</button> {/* Update button */}
           <button type="button" onClick={handleCancel} className="w-20 px-4 py-2 bg-gray-500 text-white rounded mt-4 mb-8">Cancel</button> {/* Cancel button */}
