@@ -87,7 +87,7 @@ const EditHome = ({
         
         // Upload the image
         const { data, error } = await supabase.storage
-          .from('home-images')
+          .from('blog-images')
           .upload(`public/${uniqueFileName}`, file);
 
         if (error) {
@@ -97,7 +97,7 @@ const EditHome = ({
         }
 
         const { data: publicData } = supabase.storage
-          .from('home-images')
+          .from('blog-images')
           .getPublicUrl(data.path);
         const publicURL = publicData.publicUrl;
 
