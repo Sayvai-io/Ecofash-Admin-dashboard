@@ -4,6 +4,10 @@ import { createClient } from '@supabase/supabase-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -51,6 +55,11 @@ const EditContact = ({
 
     fetchContactData();
   }, []);
+
+   const handleQuillChange = (value: string, field: string) => {
+    setEditContact((prevEditContact: any) => ({ ...prevEditContact, [field]: value })); // Specify type for prevEditAbout
+    setIsDirty(true);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setEditContact({ ...editContact, [e.target.name]: e.target.value });
@@ -140,22 +149,22 @@ const EditContact = ({
           {/* Title Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Title</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="title" 
-              value={editContact.title} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editContact.title}
+              onChange={(content) =>
+                handleQuillChange(content, "title")
+              }
             />
           </div>
 
           {/* Subquote Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Subquote</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="subquotes" 
-              value={editContact.subquotes} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editContact.subquotes}
+              onChange={(content) =>
+                handleQuillChange(content, "subquotes")
+              }
             />
           </div>
 
@@ -199,22 +208,22 @@ const EditContact = ({
           {/* Contact Title Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Contact Title</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="contact_title" 
-              value={editContact.contact_title} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editContact.contact_title}
+              onChange={(content) =>
+                handleQuillChange(content, "contact_title")
+              }
             />
           </div>
 
           {/* Contact Content Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Contact Content</label>
-            <textarea 
-              className="w-full px-4 py-2 border rounded" 
-              name="contact_content" 
-              value={editContact.contact_content} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editContact.contact_content}
+              onChange={(content) =>
+                handleQuillChange(content, "contact_content")
+              }
             />
           </div>
 
@@ -223,7 +232,7 @@ const EditContact = ({
             <label className="block mb-2 text-gray-500 font-semibold">Contact Phone</label>
             <input 
               className="w-full px-4 py-2 border rounded" 
-              name="contact_phone" 
+              name="phone" 
               value={editContact.contact_phone} 
               onChange={handleChange} 
             />
@@ -232,33 +241,33 @@ const EditContact = ({
           {/* Email Title Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Email Title</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="email_title" 
-              value={editContact.email_title} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editContact.email_title}
+              onChange={(content) =>
+                handleQuillChange(content, "email_title")
+              }
             />
           </div>
 
           {/* Email Content Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Email Content</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="email_content" 
-              value={editContact.email_content} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editContact.email_content}
+              onChange={(content) =>
+                handleQuillChange(content, "email_content")
+              }
             />
           </div>
 
           {/* Email Input */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Email</label>
-            <input 
-              className="w-full px-4 py-2 border rounded" 
-              name="email" 
-              value={editContact.email} 
-              onChange={handleChange} 
+            <ReactQuill
+              value={editContact.email}
+              onChange={(content) =>
+                handleQuillChange(content, "email")
+              }
             />
           </div>
 

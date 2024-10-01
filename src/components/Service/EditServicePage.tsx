@@ -157,7 +157,6 @@ const EditServicePage = ({
               onChange={(content) =>
                 handleQuillChange(content, "service_heading")
               }
-              
             />
           </div>
 
