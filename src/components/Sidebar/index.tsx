@@ -131,8 +131,8 @@ const menuGroups = [
             />
           </svg>
         ),
-        label: "BlogDetails",
-        route: "/blogdetails",
+        label: "Blogs",
+        route: "/blog",
       },
 
       {

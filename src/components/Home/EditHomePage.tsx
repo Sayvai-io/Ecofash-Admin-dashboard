@@ -76,7 +76,7 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
   }, []);
 
   const handleQuillChange = (value: string, field: string) => {
-    setEditHome({ ...editHome, [field]: value });
+    setEditHome((prevEditHome: any) => ({ ...prevEditHome, [field]: value })); // Specify type for prevEditAbout
     setIsDirty(true);
   };
 
@@ -573,7 +573,7 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
           </div>
           <button
             type="submit"
-            className={`w-20 rounded bg-[#609641] px-4 py-2 text-white ${!isDirty ? "cursor-not-allowed opacity-50" : ""} mb-8 mt-4`}
+            className={`w-20 rounded-md mr-2 bg-[#609641] px-4 py-2 text-white ${!isDirty ? "cursor-not-allowed opacity-50" : ""} mb-8 mt-4`}
             disabled={!isDirty}
           >
             Update
@@ -582,7 +582,7 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
           <button
             type="button"
             onClick={handleCancel}
-            className="mb-8 mt-4 w-20 rounded bg-gray-500 px-4 py-2 text-white"
+            className="mb-8 mt-4 w-20 rounded-md bg-gray-500 px-4 py-2 text-white"
           >
             Cancel
           </button>{" "}

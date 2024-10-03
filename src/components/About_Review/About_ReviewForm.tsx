@@ -36,17 +36,25 @@ const About_ReviewForm = ({ onSubmit, onBack }: { onSubmit: (data: any) => void;
         console.log("Review Form Data Submitted:", formData);
         onSubmit(formData); // Call the onSubmit prop with form data
     };
+
+    const handleCancel = () => {
+        onBack(); // Call the onBack prop
+    };
+
     const handleBack = () => {
         onBack(); // Call the onBack prop
     };
     
     return (
-        <>
-       <button onClick={handleBack} className="top-4 left-4 flex items-center w-20 px-4 py-2 bg-gray-500 text-white rounded"> {/* Back button */}
-        <FontAwesomeIcon icon={faArrowLeft} className="mr-2" /> {/* Left arrow icon */}
-        Back
-      </button>
-        <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-4 border rounded-md shadow-md">
+      
+       <div className="bg-white border rounded-lg shadow-lg p-6"> {/* Added classes for styling */}
+        <div className="flex items-center gap-8 border-b pt-4 pb-4 mb-4"> {/* Added flex container with gap */}
+            <button onClick={handleBack} className="flex items-center mb-2 w-8 px-2 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-white"> 
+            <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
+            </button>
+            <h1 className="text-black text-2xl font-bold mb-2">Add Review</h1> {/* Removed margin-top since gap is applied */}
+        </div>
+        <form onSubmit={handleSubmit} className="px-20">
             <h2 className="text-xl font-bold mb-4">AddReview</h2> {/* Updated heading */}
             <div className="mb-4">
                 <label className="block mb-1" htmlFor="name">Name</label>
@@ -85,7 +93,7 @@ const About_ReviewForm = ({ onSubmit, onBack }: { onSubmit: (data: any) => void;
                 <button 
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2 bg-blue-500 text-white rounded"
+                    className="px-4 py-2 bg-[#609641] text-white rounded"
                 >
                     Choose Image
                 </button>
@@ -117,11 +125,12 @@ const About_ReviewForm = ({ onSubmit, onBack }: { onSubmit: (data: any) => void;
                     min="1" max="5" // Assuming rating is between 1 and 5
                 />
             </div>
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200">
+            <button type="submit" className="w-20 mr-2 px-4 py-2 bg-[#609641] text-white rounded-md ${!isDirty ? 'opacity-50 cursor-not-allowed' : ''} mt-4 mb-8">
                 Upload
             </button>
+            <button type="button" onClick={handleCancel} className="w-20 px-4 py-2 bg-gray-500 text-white rounded-md mt-4 mb-8">Cancel</button> {/* Cancel button */}
         </form>
-        </>
+       </div>
     );
 };
 

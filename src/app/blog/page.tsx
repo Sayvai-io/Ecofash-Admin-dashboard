@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLaout";
-import Blog from "@/components/Dashboard";
+import BlogSection from "@/components/Blogs/BlogSection";
 
 export const metadata: Metadata = {
   title: "Ecofash Profile",
@@ -13,7 +13,7 @@ const Dashboard = () => {
       <div className="mx-auto w-full max-w-[970px]">
        
 
-        <Blog />
+        <BlogSection />
       </div>
     </DefaultLayout>
   );
