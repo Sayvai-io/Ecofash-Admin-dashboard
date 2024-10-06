@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Login from "@/components/Login/page";
 import DefaultLayout from "@/components/Layouts/DefaultLaout";
-import Blog from "../components/Dashboard/index";
 import supabase from "@/utils/supabaseClient";
 import HomeSection from "@/components/Home/HomeSection"
 
