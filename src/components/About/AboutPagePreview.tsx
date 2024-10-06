@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaEllipsisV, FaEdit, FaTrash } from "react-icons/fa"; // Import icons
 import Image from 'next/image'; // Import Image for displaying images
+import DOMPurify from 'dompurify';
 
 type AboutPagePreviewProps = {
     setIsEditAbout: (isEdit: boolean) => void; // Changed function name
@@ -33,6 +34,12 @@ const AboutPagePreview = ({
         setAboutData(about); // Pass the selected about data for editing
     };
 
+    const sanitizeHTML = (html: string) => {
+        return {
+            __html: DOMPurify.sanitize(html)
+        };
+    };
+
     return (
         <div className="max-w-5xl mx-auto pb-6 mt-2 bg-white border rounded-lg shadow-lg p-10 "> {/* Adjusted mt-20 for margin-top */}
             {aboutData.length === 0 ? (
@@ -46,7 +53,7 @@ const AboutPagePreview = ({
                     <div key={index} className="mb-4 p-4 border-b flex justify-between items-start gap-10"> {/* Added gap-4 for spacing */}
                         
                         <div className="flex-1"> {/* Allow title and content to take available space */}
-                            <h3 className="text-xl text-gray-700 font-semibold mb-4">{about.title}</h3> {/* Title */}
+                            <h3 className="text-xl text-gray-700 font-semibold mb-4" dangerouslySetInnerHTML={sanitizeHTML(about.title)}></h3> {/* Title */}
                             {about.bg_image && ( // Display About image if it exists
                                 <Image 
                                     src={about.bg_image} 
@@ -56,9 +63,9 @@ const AboutPagePreview = ({
                                     className="rounded-md mb-4" 
                                 />
                             )}
-                            <p className="text-gray-700 text-lg mb-1">{about.about_title}</p> {/* About title */}
-                            <p className="text-gray-700 font-semibold text-xl mb-2">{about.about_heading}</p> {/* About heading */}
-                            <p className="text-gray-700 mr-50 mb-4">{about.about_content}</p> {/* About content */}
+                            <p className="text-gray-700 text-lg mb-1" dangerouslySetInnerHTML={sanitizeHTML(about.about_title)}></p> {/* About title */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2" dangerouslySetInnerHTML={sanitizeHTML(about.about_heading)}></p> {/* About heading */}
+                            <p className="text-gray-700 mr-50 mb-4" dangerouslySetInnerHTML={sanitizeHTML(about.about_content)}></p> {/* About content */}
                             {about.about_image && ( // Display About image if it exists
                                 <Image 
                                     src={about.about_image} 
@@ -68,9 +75,9 @@ const AboutPagePreview = ({
                                     className="rounded-md mb-4" 
                                 />
                             )}
-                            <p className="text-gray-700 mb-1">{about.mv_title}</p> {/* MV title */}
-                            <p className="text-gray-700 font-semibold text-xl mb-2">{about.mv_heading}</p> {/* MV heading */}
-                            <p className="text-gray-700 mr-50 mb-4">{about.mv_content}</p> {/* MV content */}
+                            <p className="text-gray-700 mb-1" dangerouslySetInnerHTML={sanitizeHTML(about.mv_title)}></p> {/* MV title */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2" dangerouslySetInnerHTML={sanitizeHTML(about.mv_heading)}></p> {/* MV heading */}
+                            <p className="text-gray-700 mr-50 mb-4" dangerouslySetInnerHTML={sanitizeHTML(about.mv_content)}></p> {/* MV content */}
                             {about.mv_image && ( // Display MV image if it exists
                                 <Image 
                                     src={about.mv_image} 
@@ -80,9 +87,9 @@ const AboutPagePreview = ({
                                     className="rounded-md mb-4" 
                                 />
                             )}
-                            <p className="text-gray-700 mb-1">{about.tc_title}</p> {/* TC title */}
-                            <p className="text-gray-700 font-semibold text-xl mb-2">{about.tc_heading}</p> {/* TC heading */}
-                            <p className="text-gray-700 mr-50 mb-4">{about.tc_content}</p> {/* TC content */}
+                            <p className="text-gray-700 mb-1" dangerouslySetInnerHTML={sanitizeHTML(about.tc_title)}></p> {/* TC title */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2" dangerouslySetInnerHTML={sanitizeHTML(about.tc_heading)}></p> {/* TC heading */}
+                            <p className="text-gray-700 mr-50 mb-4" dangerouslySetInnerHTML={sanitizeHTML(about.tc_content)}></p> {/* TC content */}
                             {about.tc_image && ( // Display TC image if it exists
                                 <Image 
                                     src={about.tc_image} 
@@ -92,7 +99,7 @@ const AboutPagePreview = ({
                                     className="rounded-md mb-4" 
                                 />
                             )}
-                            <p className="text-gray-700 font-semibold text-xl mb-2">{about.review_heading}</p> {/* Review heading */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2" dangerouslySetInnerHTML={sanitizeHTML(about.review_heading)}></p> {/* Review heading */}
                         </div>
 
                         {/* Dropdown Button */}

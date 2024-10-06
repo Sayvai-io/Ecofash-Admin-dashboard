@@ -3,12 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Image from 'next/image';
 
-const About_ReviewForm = ({ onSubmit, onBack }: { onSubmit: (data: any) => void; onBack: () => void; }) => { // Accept onBack prop
+const TeamsForm = ({ onSubmit, onBack }: { onSubmit: (data: any) => void; onBack: () => void; }) => { // Accept onBack prop
     const [formData, setFormData] = useState({
         name: "",               // Changed field
-        designation: "",        // Changed field
+        role: "",               // Updated field
         profile_image: "",      // Changed field
-        comments: "",           // Changed field
+        profile_content: "",     // Updated field
         rating: "",             // Changed field
     });
     const [imagePreview, setImagePreview] = useState<string | null>(null); // State for image preview
@@ -33,7 +33,7 @@ const About_ReviewForm = ({ onSubmit, onBack }: { onSubmit: (data: any) => void;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Review Form Data Submitted:", formData);
+        console.log("Team Form Data Submitted:", formData); // Updated log message
         onSubmit(formData); // Call the onSubmit prop with form data
     };
 
@@ -52,10 +52,10 @@ const About_ReviewForm = ({ onSubmit, onBack }: { onSubmit: (data: any) => void;
             <button onClick={handleBack} className="flex items-center mb-2 w-8 px-2 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-white"> 
             <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
             </button>
-            <h1 className="text-black text-2xl font-bold mb-2">Add Review</h1> {/* Removed margin-top since gap is applied */}
+            <h1 className="text-black text-2xl font-bold mb-2">Add Team Member</h1> {/* Updated heading */}
         </div>
         <form onSubmit={handleSubmit} className="px-20">
-            <h2 className="text-xl font-bold mb-4">AddReview</h2> {/* Updated heading */}
+            <h2 className="text-xl font-bold mb-4">Add Team Member</h2> {/* Updated heading */}
             <div className="mb-4">
                 <label className="block mb-1" htmlFor="name">Name</label>
                 <input
@@ -69,21 +69,21 @@ const About_ReviewForm = ({ onSubmit, onBack }: { onSubmit: (data: any) => void;
                 />
             </div>
             <div className="mb-4">
-                <label className="block mb-1" htmlFor="designation">Designation</label>
+                <label className="block mb-1" htmlFor="role">Role</label> {/* Updated label */}
                 <input
                     type="text"
-                    name="designation"
-                    id="designation"
-                    value={formData.designation}
+                    name="role"
+                    id="role"
+                    value={formData.role} // Updated field
                     onChange={handleChange}
                     className="w-full p-2 border rounded"
                 />
             </div>
             <div className="mb-4">
-                <label htmlFor="blog-image" className="block mb-2">Profile Image</label>
+                <label htmlFor="profile-image" className="block mb-2">Profile Image</label>
                 <input
                     type="file"
-                    id="blog-image"
+                    id="profile-image"
                     accept="image/*"
                     onChange={handleImageChange}
                     ref={fileInputRef}
@@ -104,11 +104,11 @@ const About_ReviewForm = ({ onSubmit, onBack }: { onSubmit: (data: any) => void;
                 )}
             </div>
             <div className="mb-4">
-                <label className="block mb-1" htmlFor="comments">Comments</label>
+                <label className="block mb-1" htmlFor="profile_content">Profile Content</label> {/* Updated label */}
                 <textarea
-                    name="comments"
-                    id="comments"
-                    value={formData.comments}
+                    name="profile_content"
+                    id="profile_content"
+                    value={formData.profile_content} // Updated field
                     onChange={handleChange}
                     className="w-full p-2 border rounded"
                 />
@@ -125,7 +125,7 @@ const About_ReviewForm = ({ onSubmit, onBack }: { onSubmit: (data: any) => void;
                     min="1" max="5" // Assuming rating is between 1 and 5
                 />
             </div>
-            <button type="submit" className="w-20 mr-2 px-4 py-2 bg-[#609641] text-white rounded-md ${!isDirty ? 'opacity-50 cursor-not-allowed' : ''} mt-4 mb-8">
+            <button type="submit" className="w-20 mr-2 px-4 py-2 bg-[#609641] text-white rounded-md mt-4 mb-8">
                 Upload
             </button>
             <button type="button" onClick={handleCancel} className="w-20 px-4 py-2 bg-gray-500 text-white rounded-md mt-4 mb-8">Cancel</button> {/* Cancel button */}
@@ -134,4 +134,4 @@ const About_ReviewForm = ({ onSubmit, onBack }: { onSubmit: (data: any) => void;
     );
 };
 
-export default About_ReviewForm;
+export default TeamsForm;

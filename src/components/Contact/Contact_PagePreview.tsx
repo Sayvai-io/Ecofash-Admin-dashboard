@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaEllipsisV, FaEdit, FaTrash } from "react-icons/fa"; // Import icons
 import Image from 'next/image'; // Import Image for displaying images
+import DOMPurify from 'dompurify';
 
 type ContactPagePreviewProps = { // Updated type name
     setIsEditContact: (isEdit: boolean) => void; // Changed function name
@@ -33,6 +34,12 @@ const Contact_PagePreview = ({
         setContactData(contact); // Pass the selected contact data for editing
     };
 
+    const sanitizeHTML = (html: string) => {
+        return {
+            __html: DOMPurify.sanitize(html)
+        };
+    };
+
     return (
         <div className="max-w-5xl mx-auto pb-6 mt-2 bg-white border rounded-lg shadow-lg p-10 "> {/* Adjusted mt-20 for margin-top */}
             {contactData.length === 0 ? ( // Changed data check
@@ -46,8 +53,8 @@ const Contact_PagePreview = ({
                     <div key={index} className="mb-4 p-4 border-b flex justify-between items-start gap-10"> {/* Added gap-4 for spacing */}
                         
                         <div className="flex-1"> {/* Allow title and content to take available space */}
-                            <h3 className="text-xl text-gray-700 font-semibold mb-4">{contact.title}</h3> {/* Title */}
-                            <h3 className="text-xl text-gray-700 font-semibold mb-4">{contact.subquotes}</h3> {/* Subquote */}
+                            <h3 className="text-xl text-gray-700 font-semibold mb-4" dangerouslySetInnerHTML={sanitizeHTML(contact.email_title)}></h3> {/* Title */}
+                            <h3 className="text-xl text-gray-700 font-semibold mb-4" dangerouslySetInnerHTML={sanitizeHTML(contact.subquotes)}></h3> {/* Subquote */}
                             {contact.bg_image && ( // Updated property name
                                 <Image 
                                     src={contact.bg_image} // Updated property name
@@ -57,11 +64,11 @@ const Contact_PagePreview = ({
                                     className="rounded-md mb-4" 
                                 />
                             )}
-                            <p className="text-gray-700 mb-4">{contact.email_title}</p> {/* Updated property name */}
-                            <p className="text-gray-700 mb-4">{contact.email_content}</p> {/* Updated property name */}
-                            <p className="text-gray-700 mb-4">{contact.email}</p> {/* Updated property name */} 
-                            <p className="text-gray-700 mb-4">{contact.contact_title}</p> {/* Updated property name */}
-                            <p className="text-gray-700 mb-4">{contact.contact_content}</p> {/* Updated property name */}
+                            <p className="text-gray-700 mb-4" dangerouslySetInnerHTML={sanitizeHTML(contact.email_title)}></p> {/* Updated property name */}
+                            <p className="text-gray-700 mb-4" dangerouslySetInnerHTML={sanitizeHTML(contact.email_content)}></p> {/* Updated property name */}
+                            <p className="text-gray-700 mb-4" dangerouslySetInnerHTML={sanitizeHTML(contact.email)}></p> {/* Updated property name */} 
+                            <p className="text-gray-700 mb-4" dangerouslySetInnerHTML={sanitizeHTML(contact.contact_title)}></p> {/* Updated property name */}
+                            <p className="text-gray-700 mb-4" dangerouslySetInnerHTML={sanitizeHTML(contact.contact_content)}></p> {/* Updated property name */}
                             <p className="text-gray-700 mb-4">{contact.contact_phone}</p> {/* Updated property name */}
                         </div>
 

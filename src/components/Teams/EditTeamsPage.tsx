@@ -9,69 +9,63 @@ import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-type EditServiceProvidedPageProps = {
-  setIsEditService: (isEdit: boolean) => void; // Function to set edit state
-  serviceId: string; // ID of the service to edit
-  setServiceData: (data: any) => void; // This should be a function
+
+type EditTeamPageProps = {
+  setIsEditTeam: (isEdit: boolean) => void; // Function to set edit state
+  teamId: string; // ID of the team to edit
+  setTeamData: (data: any) => void; // This should be a function
 };
 
-const EditSeperate_ServicePage = ({ 
-  setIsEditService, 
-  serviceId,
-  setServiceData = () => {} // Default to a no-op function
-}: EditServiceProvidedPageProps) => {
-  const [serviceData, setServiceDataLocal] = useState<any>(null);
-  const [editService, setEditService] = useState<any>({
-    title: '',
-    heading: '',
-    content: '',
-    significance: '',
-    plan_of_action: '',
-    why_content_image: '',
-    significance_title: '',
-    plan_of_action_title: '',
-  });
+
+const EditTeamsPage = ({ 
+  setIsEditTeam, 
+  teamId,
+  setTeamData = () => {} // Default to a no-op function
+}: EditTeamPageProps) => {
+  const [teamData, setTeamDataLocal] = useState<any>(null);
+  const [editTeam, setEditTeam] = useState<any>(null);
   const [isDirty, setIsDirty] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageUploadActive, setImageUploadActive] = useState<{ [key: string]: boolean }>({
-    why_content_image: false,
+    profile_image: false,
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const fetchServiceData = async () => {
+    const fetchTeamData = async () => {
       const { data, error } = await supabase
-        .from('seperate_service') // Updated table name
+        .from('teams') // Change to your table name
         .select('*')
-        .eq('id', serviceId)
+        .eq('id', teamId)
         .single();
 
       if (error) {
-        console.error('Error fetching service data:', error);
+        console.error('Error fetching team data:', error);
         return;
       }
 
-      setServiceDataLocal(data);
-      setEditService(data);
-      setImagePreview(data.why_content_image); // Updated field name
+      setTeamDataLocal(data);
+      setEditTeam(data);
+      setImagePreview(data.profile_image);
     };
 
-    fetchServiceData();
-  }, [serviceId]);
+    fetchTeamData();
+  }, [teamId]);
 
   const handleQuillChange = (value: string, field: string) => {
-    setEditService((prevEditService: any) => ({ ...prevEditService, [field]: value })); // Specify type for prevEditAbout
+    setEditTeam((prevEditTeam: any) => ({ ...prevEditTeam, [field]: value })); // Specify type for prevEditTeam
     setIsDirty(true);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setEditService({ ...editService, [e.target.name]: e.target.value });
+    setEditTeam({ ...editTeam, [e.target.name]: e.target.value });
     setIsDirty(true);
   };
 
@@ -81,32 +75,32 @@ const EditSeperate_ServicePage = ({
       setImage(file);
       setImagePreview(URL.createObjectURL(file));
       setIsDirty(true);
-      setImageUploadActive({ ...imageUploadActive, why_content_image: true }); // Activate upload button
+      setImageUploadActive({ ...imageUploadActive, profile_image: true }); // Activate upload button
     }
   };
 
   const handleRemoveImage = () => {
     setImage(null);
     setImagePreview(null);
-    setEditService({ ...editService, why_content_image: null }); // Updated field name
+    setEditTeam({ ...editTeam, profile_image: null });
     setIsDirty(true);
-    setImageUploadActive({ ...imageUploadActive, why_content_image: false }); // Deactivate upload button
+    setImageUploadActive({ ...imageUploadActive, profile_image: false }); // Deactivate upload button
   };
 
   const handleUpdate = async () => {
-    // Check if setServiceData is a function
-    if (typeof setServiceData !== 'function') {
-        console.error('setServiceData is not a function');
+    // Check if setTeamData is a function
+    if (typeof setTeamData !== 'function') {
+        console.error('setTeamData is not a function');
         return;
     }
 
-    let updatedService = { ...editService };
-    let imageUrl = editService.why_content_image; // Default to existing image
+    let updatedTeam = { ...editTeam };
+    let imageUrl = editTeam.profile_image; // Default to existing image
 
     if (image) {
       const uniqueFileName = `${Date.now()}_${image.name}`; // Append timestamp for uniqueness
       const { data, error } = await supabase.storage
-        .from('blog-images') // Updated storage bucket name
+        .from('blog-images') // Change to your storage bucket name
         .upload(`public/${uniqueFileName}`, image);
 
       if (error) {
@@ -119,40 +113,40 @@ const EditSeperate_ServicePage = ({
       }
 
       const { data: publicData } = supabase.storage
-        .from('blog-images') // Updated storage bucket name
+        .from('blog-images') // Change to your storage bucket name
         .getPublicUrl(data.path);
       imageUrl = publicData.publicUrl; // Update imageUrl to new image URL
-    } else if (editService.why_content_image === null) {
+    } else if (editTeam.profile_image === null) {
       // If the image was removed, set imageUrl to null
       imageUrl = null;
     }
 
-   updatedService.why_content_image = imageUrl; // Update the bg_image in the updatedService object
+    updatedTeam.profile_image = imageUrl; // Update the profile_image in the updatedTeam object
 
     const { error } = await supabase
-      .from('seperate_service') // Updated table name
-      .update(updatedService)
-      .eq('id', serviceId); // Ensure you are using serviceId here
+      .from('teams') // Change to your table name
+      .update(updatedTeam)
+      .eq('id', teamId); // Ensure you are using teamId here
 
     if (error) {
-      console.error('Error updating service:', error);
+      console.error('Error updating team:', error);
     } else {
-      setServiceData((prevData: any) => 
-        prevData.map((service: any) => service.id === updatedService.id ? updatedService : service)
+      setTeamData((prevData: any) => 
+        prevData.map((team: any) => team.id === updatedTeam.id ? updatedTeam : team)
       ); // Update local state
-      setIsEditService(false); // Exit edit mode
+      setIsEditTeam(false); // Exit edit mode
     }
   };
 
   const handleCancel = () => {
-    setIsEditService(false);
+    setIsEditTeam(false);
   };
 
   const handleBack = () => {
-    setIsEditService(false);
+    setIsEditTeam(false);
   };
 
-  if (!serviceData) return <div>Loading...</div>;
+  if (!teamData) return <div>Loading...</div>;
 
   return (
     <div className="bg-white border rounded-lg shadow-lg p-6"> {/* Added classes for styling */}
@@ -160,69 +154,39 @@ const EditSeperate_ServicePage = ({
         <button onClick={handleBack} className="flex items-center mb-2 w-8 px-2 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-white"> 
           <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
         </button>
-        <h1 className="text-black text-2xl font-bold mb-2">Edit Service Provided</h1> {/* Updated heading */}
+        <h1 className="text-black text-2xl font-bold mb-2">Edit Team Member</h1> {/* Updated title */}
       </div>
-      {editService && (
+      {editTeam && (
         <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }} className="px-20">
           <div className="mb-4">
-            <label className="block mb-2 text-gray-500 font-semibold">Title</label>
-            <input
-              type="text"
-              value={editService.title}
-              onChange={(e) => handleQuillChange(e.target.value, "title")}
-              className="border border-gray-300 rounded p-2 w-full"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2 text-gray-500 font-semibold">Heading</label>
+            <label className="block mb-2 text-gray-500 font-semibold">Name</label>
             <ReactQuill
-              value={editService.heading}
+              value={editTeam.name}
               onChange={(content) =>
-                handleQuillChange(content, "heading")
+                handleQuillChange(content, "name")
               }
               
             />
           </div>
           <div className="mb-4">
-            <label className="block mb-2 text-gray-500 font-semibold">Content</label>
+            <label className="block mb-2 text-gray-500 font-semibold">Role</label>
             <ReactQuill
-              value={editService.content}
+              value={editTeam.role}
               onChange={(content) =>
-                handleQuillChange(content, "content")
+                handleQuillChange(content, "role")
               }
               
             />
           </div>
-          <div className="mb-4">
-            <label className="block mb-2 text-gray-500 font-semibold">Significance</label>
-            <ReactQuill
-              value={editService.significance}
-              onChange={(content) =>
-                handleQuillChange(content, "significance")
-              }
-              
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2 text-gray-500 font-semibold">Plan of Action</label>
-            <ReactQuill
-              value={editService.plan_of_action}
-              onChange={(content) =>
-                handleQuillChange(content, "plan_of_action")
-              }
-              
-            />
-          </div>
-          <div className="mb-4"> {/* Background Image Display */}
-            <label className="block mb-2 text-gray-500 font-semibold">Why Content Image</label>
+          <div className="mb-4"> {/* Profile Image Display */}
+            <label className="block mb-2 text-gray-500 font-semibold">Profile Image</label>
             {imagePreview ? ( // Check if the image preview exists
               <div className="mb-2">
                 <Image 
                   src={imagePreview} 
-                  alt="why_content_image" 
-                  width={300} 
-                  height={200} 
-                  style={{ width: "300px", height: "200px" }} // Maintain aspect ratio
+                  alt="Profile Image" 
+                  width={150} 
+                  height={100} 
                   className="rounded-md mb-4" 
                 />
                 <div className="flex gap-2 mt-2"> {/* Flex container for icons */}
@@ -258,26 +222,15 @@ const EditSeperate_ServicePage = ({
             />
           </div>
           <div className="mb-4">
-            <label className="block mb-2 text-gray-500 font-semibold">Significance Title</label>
+            <label className="block mb-2 text-gray-500 font-semibold">Profile Content</label>
             <ReactQuill
-              value={editService.significance_title}
+              value={editTeam.profile_content}
               onChange={(content) =>
-                handleQuillChange(content, "significance_title")
+                handleQuillChange(content, "profile_content")
               }
               
             />
           </div>
-          <div className="mb-4">
-            <label className="block mb-2 text-gray-500 font-semibold">Plan of Action Title</label>
-            <ReactQuill
-              value={editService.plan_of_action_title}
-              onChange={(content) =>
-                handleQuillChange(content, "plan_of_action_title")
-              }
-              
-            />
-          </div>
-          
           <button type="submit" className={`w-20 px-4 py-2 bg-[#609641] text-white rounded ${!isDirty ? 'opacity-50 cursor-not-allowed' : ''} mt-4 mb-8`} disabled={!isDirty}>Update</button> {/* Update button */}
           <button type="button" onClick={handleCancel} className="w-20 px-4 py-2 bg-gray-500 text-white rounded mt-4 mb-8">Cancel</button>
         </form>
@@ -286,4 +239,4 @@ const EditSeperate_ServicePage = ({
   );
 };
 
-export default EditSeperate_ServicePage;
+export default EditTeamsPage;

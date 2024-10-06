@@ -1,22 +1,20 @@
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLaout";
-import BlogSection from "@/components/Blogs/BlogSection";
+import TeamsSection from "@/components/Teams/TeamsSection";
 
 export const metadata: Metadata = {
-  title: "Ecofash Profile",
-  description: "Ecofash profile page",
+  title: "Teams Section",
+  description: "Teams Page",
 };
 
-const Dashboard = () => {
+const TeamsPage = () => {
   return (
     <DefaultLayout>
       <div className="mx-auto w-full max-w-[970px]">
-       
-
-        <BlogSection />
+        <TeamsSection />
       </div>
     </DefaultLayout>
   );
 };
 
-export default Dashboard;
+export default TeamsPage;

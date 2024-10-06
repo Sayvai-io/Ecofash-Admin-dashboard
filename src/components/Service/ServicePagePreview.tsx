@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaEllipsisV, FaEdit, FaTrash } from "react-icons/fa"; // Import icons
 import Image from 'next/image'; // Import Image for displaying images
+import DOMPurify from 'dompurify';
 
 type ServicePagePreviewProps = { // Updated type name
     setIsEditService: (isEdit: boolean) => void; // Changed function name
@@ -33,6 +34,12 @@ const ServicePagePreview = ({
         setServiceData(service); // Pass the selected service data for editing
     };
 
+    const sanitizeHTML = (html: string) => {
+        return {
+            __html: DOMPurify.sanitize(html)
+        };
+    };
+
     return (
         <div className="max-w-5xl mx-auto pb-6 mt-2 bg-white border rounded-lg shadow-lg p-10 "> {/* Adjusted mt-20 for margin-top */}
             {serviceData.length === 0 ? (
@@ -46,8 +53,8 @@ const ServicePagePreview = ({
                     <div key={index} className="mb-4 p-4 border-b flex justify-between items-start gap-10"> {/* Added gap-4 for spacing */}
                         
                         <div className="flex-1"> {/* Allow title and content to take available space */}
-                            <h3 className="text-xl text-gray-700 font-semibold mb-4">{service.service_heading}</h3> {/* Service heading */}
-                            <p className="text-gray-700 text-lg mb-1">{service.service_content}</p> {/* Service content */}
+                            <h3 className="text-xl text-gray-700 font-semibold mb-4" dangerouslySetInnerHTML={sanitizeHTML(service.service_heading)}></h3> {/* Service heading */}
+                            <p className="text-gray-700 text-lg mb-1" dangerouslySetInnerHTML={sanitizeHTML(service.service_content)}></p> {/* Service content */}
                             {service.service_image && ( // Display Service image if it exists
                                 <Image 
                                     src={service.service_image} 
@@ -57,16 +64,16 @@ const ServicePagePreview = ({
                                     className="rounded-md mb-4" 
                                 />
                             )}
-                            <p className="text-gray-700 mb-1">{service.years_of_experience_title}</p> {/* Years of experience title */}
+                            <p className="text-gray-700 mb-1" dangerouslySetInnerHTML={sanitizeHTML(service.years_of_experience_title)}></p> {/* Years of experience title */}
                             <p className="text-gray-700 font-semibold text-xl mb-2">{service.years_of_experience}</p> {/* Years of experience */}
-                            <p className="text-gray-700 mb-1">{service.satisfied_clients_title}</p> {/* Satisfied clients title */}
+                            <p className="text-gray-700 mb-1" dangerouslySetInnerHTML={sanitizeHTML(service.satisfied_clients_title)}></p> {/* Satisfied clients title */}
                             <p className="text-gray-700 font-semibold text-xl mb-2">{service.satisfied_clients}</p> {/* Satisfied clients */}
-                            <p className="text-gray-700 mb-1">{service.services_provided_title}</p> {/* Services provided title */}
+                            <p className="text-gray-700 mb-1" dangerouslySetInnerHTML={sanitizeHTML(service.services_provided_title)}></p> {/* Services provided title */}
                             <p className="text-gray-700 font-semibold text-xl mb-2">{service.services_provided}</p> {/* Services provided */}
-                            <p className="text-gray-700 mb-1">{service.business_portfolios_title}</p> {/* Business portfolios title */}
+                            <p className="text-gray-700 mb-1" dangerouslySetInnerHTML={sanitizeHTML(service.business_portfolios_title)}></p> {/* Business portfolios title */}
                             <p className="text-gray-700 font-semibold text-xl mb-2">{service.business_portfolios}</p> {/* Business portfolios */}
-                            <p className="text-gray-700 mb-1">{service.collection_heading}</p> {/* Collection heading */}
-                            <p className="text-gray-700 font-semibold text-xl mb-2">{service.collection_content}</p> {/* Collection content */}
+                            <p className="text-gray-700 mb-1" dangerouslySetInnerHTML={sanitizeHTML(service.collection_heading)}></p> {/* Collection heading */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2" dangerouslySetInnerHTML={sanitizeHTML(service.collection_content)}></p> {/* Collection content */}
                             {service.collection_image && ( // Display Collection image if it exists
                                 <Image 
                                     src={service.collection_image} 
@@ -76,7 +83,7 @@ const ServicePagePreview = ({
                                     className="rounded-md mb-4" 
                                 />
                             )}
-                            <p className="text-gray-700 font-semibold text-xl mb-2">{service.service_provided_heading}</p> {/* Collection content */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2" dangerouslySetInnerHTML={sanitizeHTML(service.service_provided_heading)}></p> {/* Collection content */}
                         </div>
 
                         {/* Dropdown Button */}
