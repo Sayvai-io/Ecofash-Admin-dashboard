@@ -123,11 +123,12 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
       "services_image",
     ]) {
       // Updated fields
-      if (images[field]) {
-        const uniqueFileName = `${Date.now()}_${images[field].name}`; // Append timestamp for uniqueness
+      const file = images[field]; // Assign to a variable for clarity
+      if (file) { // Check if file is not null
+        const uniqueFileName = `${Date.now()}_${file.name}`; // Append timestamp for uniqueness
         const { data, error } = await supabase.storage
           .from("blog-images") // Updated storage name
-          .upload(`public/${uniqueFileName}`, images[field]);
+          .upload(`public/${uniqueFileName}`, file);
 
         if (error) {
           console.error(`Error uploading ${field}:`, error);
@@ -332,7 +333,6 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
             />
           </div>
           <div className="mb-4">
-            {" "}
             {/* About Title Input */}
             <label className="mb-2 block font-semibold text-gray-500">
               About Title
@@ -347,7 +347,6 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
             {/* About Title input */}
           </div>
           <div className="mb-4">
-            {" "}
             {/* About Heading Input */}
             <label className="mb-2 block font-semibold text-gray-500">
               About Heading
@@ -362,7 +361,6 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
             {/* About Heading input */}
           </div>
           <div className="mb-4">
-            {" "}
             {/* About Content Input */}
             <label className="mb-2 block font-semibold text-gray-500">
               About Content
@@ -377,7 +375,6 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
             {/* About Content input */}
           </div>
           <div className="mb-4">
-            {" "}
             {/* About Image Display */}
             <label className="mb-2 block font-semibold text-gray-500">
               About Image
@@ -432,7 +429,6 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
             />
           </div>
           <div className="mb-4">
-            {" "}
             {/* About Image Display */}
             <label className="mb-2 block font-semibold text-gray-500">
               Services Image
@@ -487,7 +483,6 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
             />
           </div>
           <div className="mb-4">
-            {" "}
             {/* Contact Heading Input */}
             <label className="mb-2 block font-semibold text-gray-500">
               Contact Heading
@@ -502,7 +497,6 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
             {/* Contact Heading input */}
           </div>
           <div className="mb-4">
-            {" "}
             {/* Contact Content Input */}
             <label className="mb-2 block font-semibold text-gray-500">
               Contact Content
@@ -517,7 +511,6 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
             {/* Contact Content input */}
           </div>
           <div className="mb-4">
-            {" "}
             {/* Contact Image Display */}
             <label className="mb-2 block font-semibold text-gray-500">
               Contact Image
