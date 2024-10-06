@@ -103,22 +103,26 @@ const EditAboutPage = ({
 
     for (const field of ['bg_image', 'about_image', 'mv_image', 'tc_image']) {
       if (images[field]) {
-        const uniqueFileName = `${Date.now()}_${images[field].name}`; // Append timestamp for uniqueness
-        const { data, error } = await supabase.storage
-          .from('blog-images')
-          .upload(`public/${uniqueFileName}`, images[field]);
+        // Check if images[field] is not null before accessing its properties
+        const file = images[field];
+        if (file) {
+          const uniqueFileName = `${Date.now()}_${file.name}`; // Append timestamp for uniqueness
+          const { data, error } = await supabase.storage
+            .from('blog-images')
+            .upload(`public/${uniqueFileName}`, file);
 
-        if (error) {
-          console.error(`Error uploading ${field}:`, error);
-          return;
+          if (error) {
+            console.error(`Error uploading ${field}:`, error);
+            return;
+          }
+
+          const { data: publicData } = supabase.storage
+            .from('blog-images')
+            .getPublicUrl(data.path);
+          const publicURL = publicData.publicUrl;
+
+          updatedAbout[field] = publicURL; // Update the URL in the updatedAbout object
         }
-
-        const { data: publicData } = supabase.storage
-          .from('blog-images')
-          .getPublicUrl(data.path);
-        const publicURL = publicData.publicUrl;
-
-        updatedAbout[field] = publicURL; // Update the URL in the updatedAbout object
       }
     }
 
@@ -214,9 +218,9 @@ const EditAboutPage = ({
             />
           </div>
           
-          <div className="mb-4"> {/* About Image Display */}
-          <label className="block mb-2 text-gray-500 font-semibold">About Image</label>
-            {imagePreviews.about_image ? ( // Check if the background image preview exists
+          <div className="mb-4"> {/* Background Image Display */}
+            <label className="block mb-2 text-gray-500 font-semibold">About Image</label>
+              {imagePreviews.about_image ? ( // Check if the background image preview exists
               <div className="mb-2">
                 <Image 
                   src={imagePreviews.about_image} 
@@ -239,14 +243,14 @@ const EditAboutPage = ({
               </div>
             ) : ( // No image box
               <div 
-                className={`w-[300px] h-[200px] bg-gray-200 rounded-md flex items-center justify-center mb-2 cursor-pointer ${imageUploadActive.bg_image ? '' : 'opacity-50 cursor-not-allowed'}`} 
-                onClick={() => imageUploadActive.bg_image && fileInputRefs.bg_image.current?.click()} // Clickable area
+                className={`w-[300px] h-[200px] bg-gray-200 rounded-md flex items-center justify-center mb-2 cursor-pointer ${imageUploadActive.about_image ? '' : 'opacity-50 cursor-not-allowed'}`} 
+                onClick={() => imageUploadActive.about_image && fileInputRefs.about_image.current?.click()} // Clickable area
               >
                 <span className="text-gray-700">Upload Image</span>
                 <button 
                   type="button" 
                   className="flex items-center px-3 py-2 text-gray-700 rounded ml-2" // Added margin-left for spacing
-                  disabled={!imageUploadActive.bg_image}
+                  disabled={!imageUploadActive.about_image}
                 >
                   <FontAwesomeIcon icon={faFileUpload} /> {/* File upload icon without margin */}
                 </button>
@@ -255,8 +259,8 @@ const EditAboutPage = ({
             <input 
               type="file" 
               accept="image/*" 
-              onChange={(e) => handleImageChange(e, 'bg_image')} 
-              ref={fileInputRefs.bg_image} 
+              onChange={(e) => handleImageChange(e, 'about_image')} 
+              ref={fileInputRefs.about_image} 
               className="hidden" 
             />
           </div>
