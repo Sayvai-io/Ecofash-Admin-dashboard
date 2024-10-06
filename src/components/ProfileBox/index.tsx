@@ -8,6 +8,7 @@ const ProfileBox = () => {
   const [newPassword, setNewPassword] = useState(""); // New state for new password
   const [error, setError] = useState<string | null>(null);
   const [confirmPassword, setConfirmPassword] = useState(""); // New state for confirm password
+  const [showChangePassword, setShowChangePassword] = useState(false); // New state for toggling change password visibility
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,50 +95,78 @@ const ProfileBox = () => {
           
         </div>
       </div>
-      <h2 className="text-2xl font-bold mt-8 mb-6">Change Password</h2> {/* Added heading for Change Password */}
-      <form onSubmit={handleSubmit} className="space-y-4 mt-6 mb-10">
-        <div className="flex mb-4">
-          <label className="w-1/5 mb-2 pr-2">Current Password:</label>
-          <input
-            className="border p-2 w-1/3 -ml-2"
-            type="password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            required
-          />
+      {/* Added contact information section */}
+      <div className="mt-8 mb-6 ">
+        <h2 className="text-2xl font-bold text-gray-700">Contact Information</h2>
+        <div className="px-10 mt-5">
+        <p className="font-bold text-xl text-gray-500 mt-2 mb-4">
+          <span className=" pr-10">Email address</span>: mohan@ecofash.life
+        </p>
+        <p className="font-bold text-xl text-gray-500 mt-2 mb-4">
+          <span className=" pr-3">Contact Number</span>: +91 9872325297
+        </p>
+        <p className="font-bold text-xl text-gray-500 mt-2 mb-4">
+          <span className=" pr-20">Password</span>  
+          <button 
+            className="text-blue-500 " 
+            onClick={() => setShowChangePassword(!showChangePassword)} // Toggle change password visibility
+          >
+           : Change Password
+          </button>
+        </p>
         </div>
-        <div className="flex mb-4">
-          <label className="w-1/5 mb-2 pr-2">New Password:</label>
-          <input
-            className="border p-2 w-1/3 -ml-2"
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div className="flex mb-4">
-          <label className="w-1/5 mb-2 ">Confirm Password:</label>
-          <input
-            className="border p-2 w-1/3 -ml-2"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && (
-          <div className="text-red-500 mb-4">
-            {error}
-          </div>
-        )}
-        <button
-          className="ml-40 bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700"
-          type="submit"
-        >
-          Change Password
-        </button>
-      </form>
+      </div>
+      {/* Change Password Section with Box */}
+      {showChangePassword && ( // Conditionally render the change password section
+         <div className="mt-8 mb-6 p-4 border rounded-lg bg-white shadow-md max-w-md mx-auto"> {/* Changed to white background, added shadow and max width */}
+         <h2 className="text-2xl font-bold mb-4">Change Password</h2>
+         <form onSubmit={handleSubmit} className="space-y-4">
+           <div className="mb-4"> {/* Removed flex */}
+             <label className="block mb-2 pr-2">Current Password:</label> {/* Changed to block for full width */}
+             <input
+               className="border p-2 w-full" // Changed to full width
+               type="password"
+               value={currentPassword}
+               onChange={(e) => setCurrentPassword(e.target.value)}
+               required
+             />
+           </div>
+           <div className="mb-4"> {/* Removed flex */}
+             <label className="block mb-2 pr-2">New Password:</label> {/* Changed to block for full width */}
+             <input
+               className="border p-2 w-full" // Changed to full width
+               type="password"
+               value={newPassword}
+               onChange={(e) => setNewPassword(e.target.value)}
+               required
+             />
+           </div>
+           <div className="mb-4"> {/* Removed flex */}
+             <label className="block mb-2 pr-2">Confirm Password:</label> {/* Changed to block for full width */}
+             <input
+               className="border p-2 w-full" // Changed to full width
+               type="password"
+               value={confirmPassword}
+               onChange={(e) => setConfirmPassword(e.target.value)}
+               required
+             />
+           </div>
+           {error && (
+             <div className="text-red-500 mb-4">
+               {error}
+             </div>
+           )}
+           
+           <button
+             className="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700"
+             type="submit"
+           >
+             Change Password
+           </button>
+           
+         </form>
+       </div>
+      )}
     </div>
   );
 };

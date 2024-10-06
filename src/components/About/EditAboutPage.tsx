@@ -291,7 +291,7 @@ const EditAboutPage = ({
             />{/* About Content input */}
           </div>
           <div className="mb-4"> {/* MV Title Input */}
-            <label className="block mb-2 text-gray-500 font-semibold  ">MV Title</label>
+            <label className="block mb-2 text-gray-500 font-semibold  ">Mission Vision Title</label>
             <ReactQuill
               value={editAbout.mv_title}
               onChange={(content) =>
@@ -300,8 +300,30 @@ const EditAboutPage = ({
               
             />{/* MV Title input */}
           </div>
+
+          <div className="mb-4"> {/* MV Title Input */}
+            <label className="block mb-2 text-gray-500 font-semibold  ">Mission Vision  Heading</label>
+            <ReactQuill
+              value={editAbout.mv_heading}
+              onChange={(content) =>
+                handleQuillChange(content, "mv_heading")
+              }
+              
+            />{/* MV Title input */}
+          </div>
+
+          <div className="mb-4"> {/* MV Title Input */}
+            <label className="block mb-2 text-gray-500 font-semibold  ">Mission Vision Content</label>
+            <ReactQuill
+              value={editAbout.mv_content}
+              onChange={(content) =>
+                handleQuillChange(content, "mv_content")
+              }
+              
+            />{/* MV Title input */}
+          </div>
           <div className="mb-4"> {/* MV Heading Input */}
-            <label className="block mb-2 text-gray-500 font-semibold">MV Image</label>
+            <label className="block mb-2 text-gray-500 font-semibold">Mission Vision Image</label>
             {imagePreviews.mv_image ? ( // Check if the background image preview exists
               <div className="mb-2">
                 <Image 
@@ -348,7 +370,7 @@ const EditAboutPage = ({
           </div>
 
           <div className="mb-4"> {/* TC Title Input */}
-            <label className="block mb-2 text-gray-500 font-semibold">TC Title</label>
+            <label className="block mb-2 text-gray-500 font-semibold">Our Team Title</label>
             <ReactQuill
               value={editAbout.tc_title}
               onChange={(content) =>
@@ -358,7 +380,7 @@ const EditAboutPage = ({
             />{/* TC Title input */}
           </div>
           <div className="mb-4"> {/* TC Heading Input */}
-            <label className="block mb-1">TC Heading</label>
+            <label className="block mb-2 text-gray-500 font-semibold">Our Team Heading</label>
             <ReactQuill
               value={editAbout.tc_heading}
               onChange={(content) =>
@@ -368,7 +390,7 @@ const EditAboutPage = ({
             /> {/* TC Heading input */}
           </div>
           <div className="mb-4"> {/* TC Content Input */}
-            <label className="block mb-2 text-gray-500 font-semibold">TC Content</label>
+            <label className="block mb-2 text-gray-500 font-semibold">Our Team Content</label>
             <ReactQuill
               value={editAbout.tc_content}
               onChange={(content) =>
@@ -379,7 +401,7 @@ const EditAboutPage = ({
           </div>
           
           <div className="mb-4"> {/* TC Image Display */}
-          <label className="block mb-2 text-gray-500 font-semibold">TC Image</label>
+          <label className="block mb-2 text-gray-500 font-semibold">Our Team Image</label>
             {imagePreviews.tc_image ? ( // Check if the background image preview exists
               <div className="mb-2">
                 <Image 
@@ -435,7 +457,7 @@ const EditAboutPage = ({
               
             />{/* Review Heading input */}
           </div>
-          <button type="submit" className={`w-20 mr-2 px-4 py-2 bg-[#609641] text-white rounded-md ${!isDirty ? 'opacity-50 cursor-not-allowed' : ''} mt-4 mb-8`} disabled={!isDirty}>Update</button> {/* Update button */}
+          <button type="submit" className={`w-20 mr-2 px-4 py-2 bg-[#609641] text-white rounded-md ${!isDirty ? 'opacity-50 cursor-not-allowed' : ''} mt-4 mb-8 mr-2`} disabled={!isDirty}>Update</button> {/* Update button */}
           <button type="button" onClick={handleCancel} className="w-20 px-4 py-2 bg-gray-500 text-white rounded-md mt-4 mb-8">Cancel</button> {/* Cancel button */}
         </form>
       )}
