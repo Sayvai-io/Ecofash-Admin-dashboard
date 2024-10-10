@@ -134,8 +134,12 @@ const menuGroups = [
             />
           </svg>
         ),
-        label: "Contact_Page_Preview",
-        route: "/contact",
+        label: "Contact",
+        route: "#",
+        children: [
+          { label: "Contact_Page_Preview", route: "/contact" },
+          { label: "Contact_Address_Preview", route: "/contact_address" },
+        ],
       },
 
       {
