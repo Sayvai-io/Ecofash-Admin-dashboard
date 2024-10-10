@@ -11,16 +11,16 @@ interface Address {
 }
 
 type AddressPagePreviewProps = {
-  setIsEditReview: (isEdit: boolean) => void;
-  setReviewId: (id: any) => void;
+  setIsEditAddress: (isEdit: boolean) => void;
+  addressId: string;
   onDelete: (id: any) => void;
   onEdit: (address: any) => void;
   onAddAddressToggle: () => void;
 };
 
 const Contact_Address_PagePreview = ({  
-  setIsEditReview,
-  setReviewId,
+  setIsEditAddress,
+  addressId,
   onDelete,
   onEdit,
   onAddAddressToggle
@@ -55,7 +55,7 @@ const Contact_Address_PagePreview = ({
   const handleDelete = async () => {
     if (selectedAddressId) {
       const { error } = await supabase
-        .from("address")
+        .from("address")  
         .delete()
         .eq("id", selectedAddressId);
 
@@ -110,8 +110,8 @@ const Contact_Address_PagePreview = ({
                             className="flex items-center"
                             onClick={() => {
                               setDropdownOpenIndex(null);
-                              setReviewId(address.id);
-                              setIsEditReview(true);
+                              setAddressId(address.id);    
+                              setIsEditAddress(true);
                             }}
                           >
                             <FaEdit className="mr-2" /> <span>Edit</span>

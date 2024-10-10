@@ -122,18 +122,18 @@ const Contact_Address_Section = () => {
                 />
             ) : isEditAddress ? (
                 <EditContact_Address 
-                    setIsEditReview={setIsEditAddress}
-                    reviewId={addressId || ''} // Ensure addressId is a string, even if undefined
-                    setAddressData={(data) => setAddressData(data)} // Correctly pass the setAddressData function
+                    setIsEditAddress={setIsEditAddress}
+                    addressId={addressId || ''} // Ensure addressId is a string, even if undefined
+                    setAddressData={(data: any) => setAddressData(data)} // Correctly pass the setAddressData function
                 />
             ) : (
                 <Contact_Address_PagePreview 
-                    setIsEditReview={setIsEditAddress}
-                    setReviewId={setAddressId}
-                    // reviewData={addressData} 
+                    setIsEditAddress={setIsEditAddress}
+                    addressId={addressId || ''} // Ensure addressId is a string, even if undefined
+                    addressData={addressData} 
                     onDelete={handleDeleteAddress} 
                     onEdit={handleEditAddress} // Pass handleEditAddress
-                    onAddAddressToggle-={handleAddAddressToggle}
+                    onAddAddressToggle={handleAddAddressToggle}
                 />
             )}
         </div>

@@ -14,18 +14,18 @@ const supabase = createClient(
 );
 
 type EditContact_Address_PageProps = {
-  setIsEditReview: (isEdit: boolean) => void; // Function to set edit state
-  reviewId: string; // ID of the review to edit
-  setReviewData: (data: any) => void; // This should be a function
+  setIsEditAddress: (isEdit: boolean) => void; // Function to set edit state
+  addressId: string; // ID of the review to edit
+  setAddressData: (data: any) => void; // This should be a function
 };
 
 const EditContact_Address_Page = ({ 
-  setIsEditReview, 
-  reviewId,
-  setReviewData = () => {} // Default to a no-op function
+  setIsEditAddress, 
+  addressId,
+  setAddressData = () => {} // Default to a no-op function
 }: EditContact_Address_PageProps) => {
-  const [reviewData, setReviewDataLocal] = useState<any>(null);
-  const [editReview, setEditReview] = useState<any>(null);
+  const [addressData, setAddressDataLocal] = useState<any>(null);
+  const [editAddress, setEditAddress] = useState<any>(null);
   const [isDirty, setIsDirty] = useState(false);
   const [countryName, setCountryName] = useState<string | null>(null); // State for country name
 
@@ -34,7 +34,7 @@ const EditContact_Address_Page = ({
       const { data, error } = await supabase
         .from('address') // Fetch from address table
         .select('full_address, email, contact_no, country_name') // Select necessary fields
-        .eq('id', reviewId) // Assuming reviewId corresponds to address ID
+        .eq('id', addressId) // Assuming reviewId corresponds to address ID
         .single();
 
       if (error) {
@@ -42,58 +42,58 @@ const EditContact_Address_Page = ({
         return;
       }
 
-      setReviewDataLocal(data);
-      setEditReview(data);
+      setAddressDataLocal(data);
+      setEditAddress(data);
       setCountryName(data.country_name); // Set country name
     };
 
     fetchReviewData();
-  }, [reviewId]);
+  }, [addressId]);
 
   const handleQuillChange = (value: string, field: string) => {
-    setEditReview((prevEditReview: any) => ({ ...prevEditReview, [field]: value })); // Specify type for prevEditAbout
+    setEditAddress((prevEditAddress: any) => ({ ...prevEditAddress, [field]: value })); // Specify type for prevEditAbout
     setIsDirty(true);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setEditReview({ ...editReview, [e.target.name]: e.target.value });
+    setEditAddress({ ...editAddress, [e.target.name]: e.target.value });
     setIsDirty(true);
   };
 
   const handleUpdate = async () => {
     // Check if setReviewData is a function
-    if (typeof setReviewData !== 'function') {
-        console.error('setReviewData is not a function');
+    if (typeof setAddressData !== 'function') {
+        console.error('setAddressData is not a function');
         return;
     }
 
-    let updatedReview = { ...editReview };
-    updatedReview.country_name = countryName; // Include country name in update
+    let updatedAddress = { ...editAddress };
+      updatedAddress.country_name = countryName; // Include country name in update
 
     const { error } = await supabase
       .from('address') // Update address table
-      .update(updatedReview)
-      .eq('id', reviewId); // Ensure you are using reviewId here
+      .update(updatedAddress)
+      .eq('id', addressId); // Ensure you are using addressId here
 
     if (error) {
       console.error('Error updating review:', error);
     } else {
-      setReviewData((prevData: any) => 
-        prevData.map((review: any) => review.id === updatedReview.id ? updatedReview : review)
+      setAddressData((prevData: any) => 
+        prevData.map((address: any) => address.id === updatedAddress.id ? updatedAddress : address)
       ); // Update local state
-      setIsEditReview(false); // Exit edit mode
+      setIsEditAddress(false); // Exit edit mode
     }
   };
 
   const handleCancel = () => {
-    setIsEditReview(false);
+    setIsEditAddress(false);
   };
 
   const handleBack = () => {
-    setIsEditReview(false);
+    setIsEditAddress(false);
   };
 
-  if (!reviewData) return <div>Loading...</div>;
+  if (!addressData) return <div>Loading...</div>;
 
   return (
     <div className="bg-white border rounded-lg shadow-lg p-6"> {/* Added classes for styling */}
@@ -103,12 +103,12 @@ const EditContact_Address_Page = ({
         </button>
         <h1 className="text-black text-2xl font-bold mb-2">Edit About Page</h1> {/* Removed margin-top since gap is applied */}
       </div>
-      {editReview && (
+      {editAddress && (
         <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }} className="px-20">
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Name</label>
             <ReactQuill
-              value={editReview.name}
+              value={editAddress.name}
               onChange={(content) =>
                 handleQuillChange(content, "name")
               }
@@ -117,7 +117,7 @@ const EditContact_Address_Page = ({
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Designation</label>
             <ReactQuill
-              value={editReview.designation}
+              value={editAddress.designation}
               onChange={(content) =>
                 handleQuillChange(content, "designation")
               }
@@ -126,7 +126,7 @@ const EditContact_Address_Page = ({
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Comments</label>
             <ReactQuill
-              value={editReview.comments}
+              value={editAddress.comments}
               onChange={(content) =>
                 handleQuillChange(content, "comments")
               }
@@ -138,7 +138,7 @@ const EditContact_Address_Page = ({
               type="number" 
               className="w-full px-4 py-2 border rounded" 
               name="rating" 
-              value={editReview.rating} 
+              value={editAddress.rating} 
               onChange={handleChange} 
               min="1" max="5" 
               required
