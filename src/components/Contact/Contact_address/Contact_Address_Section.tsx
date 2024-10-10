@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js';
 import Country_Address_Form from "./Contact_Address_Form";
 import Country_PagePreview from "./Contact_Address_PagePreview";
-
+import EditAddress from "./EditContact_Address"; // Updated to use EditAddress
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -14,6 +14,8 @@ const Country_Address_Section = () => {
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState<string | null>(null); // State to hold error messages
     const [isAddAddressOpen, setIsAddAddressOpen] = useState(false); // State to control Add Address form visibility
+    const [isEditAddressOpen, setIsEditAddressOpen] = useState(false); // State for EditAddress visibility
+    const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null); // State to hold the address ID for editing
 
     useEffect(() => {
         const fetchCountries = async () => {
@@ -31,7 +33,7 @@ const Country_Address_Section = () => {
             setLoading(false);
         };
 
-        fetchCountries();
+        fetchCountries();                                           
     }, []); // Empty dependency array means this runs once on mount
 
     const handleCountrySubmit = async (formData: any) => {
@@ -83,6 +85,18 @@ const Country_Address_Section = () => {
         }
     };
 
+    const handleEditAddress = (addressId: string) => {
+        setSelectedAddressId(addressId); // Set the selected address ID for editing
+        setIsEditAddressOpen(true); // Show EditAddress
+    };  
+
+    const handleAddAddressToggle = () => {
+        setIsAddAddressOpen(prev => !prev); // Toggle the Add Address form        
+        if (isAddAddressOpen) {
+            setIsEditAddressOpen(false); // Close edit mode if opening add address
+        }
+    };
+
     if (loading) {
         return <div>Loading...</div>; // Loading state
     }
@@ -99,9 +113,16 @@ const Country_Address_Section = () => {
                     onSubmitAddress={handleAddressSubmit} 
                     onBack={() => setIsAddAddressOpen(false)} // Pass the handleBack function
                 />
+            ) : isEditAddressOpen ? (
+                <EditAddress 
+                    setIsEditAddress={setIsEditAddressOpen}
+                    addressId={selectedAddressId || ''} // Ensure addressId is a string, even if undefined
+                    setAddressData={(data) => setCountries(data)} // Correctly pass the setAddressData function
+                />
             ) : (
                 <Country_PagePreview 
-                    onAddAddressToggle={() => setIsAddAddressOpen(true)} // Toggle the Add Address form
+                    onAddAddressToggle={handleAddAddressToggle} // Toggle the Add Address form
+                    onEditAddress={handleEditAddress} // Pass the edit handler
                 />
             )}
         </div>

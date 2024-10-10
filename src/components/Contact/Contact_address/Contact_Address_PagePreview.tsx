@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import supabase from "@/utils/supabaseClient";
 import { FaEllipsisV, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 
-const Country_PagePreview = ({ onAddAddressToggle }: { onAddAddressToggle: () => void; }) => {
+const Country_PagePreview = ({ onAddAddressToggle, onEditAddress }: { onAddAddressToggle: () => void; onEditAddress: (addressId: string) => void; }) => {
     const [countries, setCountries] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null);
@@ -85,8 +85,7 @@ const Country_PagePreview = ({ onAddAddressToggle }: { onAddAddressToggle: () =>
                                                         className="flex items-center"
                                                         onClick={() => {
                                                             setDropdownOpenIndex(null);
-                                                            setSelectedAddressId(address.id);    
-                                                            // Trigger edit functionality here
+                                                            onEditAddress(address.id); // Trigger edit functionality here
                                                         }}
                                                     >
                                                         <FaEdit className="mr-2" /> <span>Edit</span>
