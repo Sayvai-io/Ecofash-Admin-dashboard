@@ -15,8 +15,7 @@ const Country_Address_Form = ({ onSubmitCountry, onSubmitAddress, onBack }: { on
     const [countries, setCountries] = useState<any[]>([]); // State to hold countries
     const [isAddressVisible, setIsAddressVisible] = useState(false); // State to manage address form visibility
     const [isAddAddressDisabled, setIsAddAddressDisabled] = useState(false); // State to manage button disable
-    const [isNewCountryInputDisabled, setIsNewCountryInputDisabled] = useState(false); // State to manage new country input disable
-    const [isNewCountryVisible, setIsNewCountryVisible] = useState(true); // State to manage visibility of new country input
+    const [isNewCountryInputVisible, setIsNewCountryInputVisible] = useState(false); // State to manage visibility of new country input
 
     useEffect(() => {
         const fetchCountries = async () => {
@@ -39,13 +38,14 @@ const Country_Address_Form = ({ onSubmitCountry, onSubmitAddress, onBack }: { on
         setCountryName(selectedCountry?.country_name || "");
         setFormData({ ...formData, country_id: selectedCountry?.id || "" }); // Set country_id in formData
         setIsAddressVisible(false); // Reset address visibility when changing country
+        setIsNewCountryInputVisible(false); // Hide new country input when a country is selected
     };
 
     const handleNewCountryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewCountryName(e.target.value); // Update new country name
         setIsAddAddressDisabled(e.target.value.trim() === ""); // Enable/disable button based on input
-        setIsNewCountryInputDisabled(false); // Enable the new country input field
     };
+
 
     const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -73,18 +73,16 @@ const Country_Address_Form = ({ onSubmitCountry, onSubmitAddress, onBack }: { on
                     setFormData({ ...formData, country_id: newCountry.id }); // Set country_id in formData
                     setCountryName(newCountry.country_name); // Set the selected country name
                     setIsAddressVisible(true); // Show address fields after adding new country
-                    setIsNewCountryInputDisabled(true); // Disable the new country input field
                 }
             }
             setNewCountryName(""); // Clear new country input
+            setIsNewCountryInputVisible(false); // Hide the new country input section after submission
         }
     };
 
     const handleAddAddressClick = () => {
         setIsAddressVisible(true); // Show address fields when "Add Address" is clicked
         setIsAddAddressDisabled(true); // Disable the "Add Address" button
-        setIsNewCountryInputDisabled(true); // Disable the new country input field when adding address
-        setIsNewCountryVisible(false); // Hide the new country input section
     };
 
     const handleAddressSubmit = (e: React.FormEvent) => {
@@ -110,7 +108,7 @@ const Country_Address_Form = ({ onSubmitCountry, onSubmitAddress, onBack }: { on
             <form onSubmit={handleCountrySubmit} className="mb-4">
                 <div className="flex items-center mb-4"> {/* Flex container for alignment */}
                     <div className="flex-grow mr-2"> {/* Allow the dropdown to take available space */}
-                        <label className="block mb-1" htmlFor="country_name">Select Country</label>
+                        <label className="block mb-2 font-bold text-gray-600" htmlFor="country_name">Existing Country</label>
                         <select
                             name="country_name"
                             id="country_name"
@@ -128,18 +126,28 @@ const Country_Address_Form = ({ onSubmitCountry, onSubmitAddress, onBack }: { on
                     <button 
                         type="button" 
                         onClick={handleAddAddressClick} 
-                        className="w-32 mt-4 px-4 py-2 bg-[#609641] text-white rounded-md"
+                        className="w-32 mt-4 px-4 py-2 bg-[#609641] text-white rounded-md hover:bg-[#5cb85c]" // Change hover color here
                         disabled={isAddAddressDisabled || !formData.country_id} // Disable if address section is open or no country selected
                     >
                         Add Address
                     </button>
                 </div>
             </form>
-            {isNewCountryVisible && ( // Conditionally render the new country input section
+            {/* Conditionally render the Add New Country button only if no country is selected */}
+            {!formData.country_id && (
+                <button 
+                    type="button" 
+                    onClick={() => setIsNewCountryInputVisible(!isNewCountryInputVisible)} // Toggle new country input visibility
+                    className={`w-42 mt-4 mb-4 px-4 py-2 rounded-md ${isNewCountryInputVisible ? 'bg-red-500' : 'bg-[#609641]'} text-white`}
+                >
+                    {isNewCountryInputVisible ? "Cancel New Country" : "Add New Country" }
+                </button>
+            )}
+            {isNewCountryInputVisible && ( // Conditionally render the new country input section
                 <form onSubmit={handleCountrySubmit} className="mb-4">
                     <div className="flex items-center mb-4"> {/* Flex container for alignment */}
                         <div className="flex-grow mr-2"> 
-                            <label className="block mb-1" htmlFor="new_country_name">Add New Country</label>
+                            <label className="block mb-1" htmlFor="new_country_name">New Country Name</label>
                             <input
                                 type="text"
                                 name="new_country_name"
@@ -148,7 +156,6 @@ const Country_Address_Form = ({ onSubmitCountry, onSubmitAddress, onBack }: { on
                                 onChange={handleNewCountryChange}
                                 className="w-3/4 p-2 border rounded"
                                 required
-                                disabled={isNewCountryInputDisabled} // Disable if new country input is disabled
                             />
                         </div>
                         <button 
@@ -208,5 +215,6 @@ const Country_Address_Form = ({ onSubmitCountry, onSubmitAddress, onBack }: { on
         </div>
     );
 };
+
 
 export default Country_Address_Form;
