@@ -5,6 +5,8 @@ import supabase from "@/utils/supabaseClient";
 
 import { FaEllipsisV, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 
+import DOMPurify from 'dompurify';
+
 
 const Country_PagePreview = ({ onAddAddressToggle, onEditAddress }: { onAddAddressToggle: () => void; onEditAddress: (addressId: string) => void; }) => {
 
@@ -127,6 +129,12 @@ const Country_PagePreview = ({ onAddAddressToggle, onEditAddress }: { onAddAddre
 
     };
 
+    const sanitizeHTML = (html: string) => {
+      return {
+          __html: DOMPurify.sanitize(html)
+      };
+  };
+
     if (loading) {
 
         return <div>Loading...</div>;
@@ -162,7 +170,7 @@ const Country_PagePreview = ({ onAddAddressToggle, onEditAddress }: { onAddAddre
                     <div key={country.id} className="border rounded-md bg-gray-100 p-4 mb-4">
 
                         <div className="flex justify-between items-center">
-                            <h2 className="text-lg mb-4 font-bold">{country.country_name}</h2>
+                            <h2 className="text-lg mb-4 font-bold" dangerouslySetInnerHTML={sanitizeHTML(country.country_name)}></h2>
 
                             <button className="text-gray-500 mb-4 hover:text-gray-700 focus:outline-none hover:bg-gray-200 rounded-md p-2" onClick={() => {
 
@@ -207,10 +215,10 @@ const Country_PagePreview = ({ onAddAddressToggle, onEditAddress }: { onAddAddre
 
                                     <div className="ml-4  flex-grow">
 
-                                        <p className="text-gray-700">Full Address: {address.full_address}</p>
+                                        <p className="text-gray-700" dangerouslySetInnerHTML={sanitizeHTML(address.full_address)}></p>
 
-                                        <p className="text-gray-700">Email: {address.email}</p>
-                                        <p className="text-gray-700">Contact No: {address.contact_no}</p>
+                                        <p className="text-gray-700" dangerouslySetInnerHTML={sanitizeHTML(address.email)}></p> 
+                                        <p className="text-gray-700" dangerouslySetInnerHTML={sanitizeHTML(address.contact_no)}></p>
                                     </div>
 
                                     <div className="relative">
