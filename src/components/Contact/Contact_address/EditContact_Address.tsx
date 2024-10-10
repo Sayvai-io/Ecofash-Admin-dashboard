@@ -3,6 +3,11 @@ import React, { useState, useEffect } from "react";
 import { createClient } from '@supabase/supabase-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
+
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -56,6 +61,15 @@ const EditAddress = ({
     fetchAddressData();
   }, [addressId]);
 
+  const handleQuillChange = (value: string, field: string) => {
+    // Only update if the value has changed
+    if (addressData && addressData[field] !== value) {
+      setAddressDataLocal((prevEditReview: any) => ({ ...prevEditReview, [field]: value }));
+      setIsDirty(true);
+    }
+  };
+
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setAddressDataLocal({ ...addressData, [e.target.name]: e.target.value });
     setIsDirty(true);
@@ -76,7 +90,12 @@ const EditAddress = ({
     // Update the address
     const { error: addressError } = await supabase
       .from('address')
-      .update(addressData)
+      .update({
+        full_address: addressData.full_address, // Ensure you are updating the correct fields
+        email: addressData.email,
+        contact_no: addressData.contact_no,
+        country_id: addressData.country_id // Assuming you have a country_id in addressData
+      })
       .eq('id', addressId); // Ensure you are using addressId here
 
     if (addressError) {
@@ -85,7 +104,7 @@ const EditAddress = ({
       // Update the country name in the country table
       const { error: countryError } = await supabase
         .from('country')
-        .update({ country_name: countryName })
+        .update({ country_name: addressData.country_name }) // Update the country name based on the country_id
         .eq('id', addressData.country_id); // Update the country based on the country_id
 
       if (countryError) {
@@ -121,46 +140,42 @@ const EditAddress = ({
         <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }} className="px-20">
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Full Address</label>
-            <input
-              type="text"
-              name="full_address"
+            <ReactQuill
               value={addressData.full_address}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
+              onChange={(content: string) =>
+                handleQuillChange(content, "full_address")
+              }
+              
             />
           </div>
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Email</label>
-            <input
-              type="email"
-              name="email"
+            <ReactQuill
               value={addressData.email}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
+              onChange={(content: string) =>  
+                handleQuillChange(content, "email")
+              }
+              
             />
           </div>
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Contact No</label>
-            <input
-              type="text"
-              name="contact_no"
+            <ReactQuill
               value={addressData.contact_no}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
+              onChange={(content: string) =>
+                handleQuillChange(content, "contact_no")
+              }
+              
             />
           </div>
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Country</label>
-            <input
-              type="text"
-              name="country_name"
+            <ReactQuill
               value={countryName}
-              onChange={handleCountryChange}
-              className="w-full p-2 border rounded"
-              required
+              onChange={(content: string) =>
+                handleQuillChange(content, "country_name")
+              }
+              
             />
           </div>
           <button type="submit" className={`w-20 px-4 py-2 bg-[#609641] text-white rounded ${!isDirty ? 'opacity-50 cursor-not-allowed' : ''} mt-4 mb-8`} disabled={!isDirty}>Update</button> {/* Update button */}
