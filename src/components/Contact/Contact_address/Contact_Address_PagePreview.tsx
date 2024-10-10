@@ -6,7 +6,7 @@ import { FaEllipsisV, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 const Country_PagePreview = ({ onAddAddressToggle, onEditAddress }: { onAddAddressToggle: () => void; onEditAddress: (addressId: string) => void; }) => {
     const [countries, setCountries] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null);
+    const [dropdownOpenId, setDropdownOpenId] = useState<string | null>(null); // Change to store address ID
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
 
@@ -63,28 +63,31 @@ const Country_PagePreview = ({ onAddAddressToggle, onEditAddress }: { onAddAddre
             </div>
 
             <div className="grid gap-4">
-                {countries.map((country, countryIndex) => (
-                    <div key={countryIndex} className="border rounded-md bg-gray-100 p-4 mb-4">
+                {countries.map((country) => (
+                    <div key={country.id} className="border rounded-md bg-gray-100 p-4 mb-4">
                         <h2 className="text-lg font-bold">{country.country_name}</h2>
                         {country.addresses.length > 0 ? (
-                            country.addresses.map((address: any, addressIndex: number) => (
-                                <div key={addressIndex} className="flex p-4 border rounded-md bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
+                            country.addresses.map((address: any) => (
+                                <div key={address.id} className="flex p-4 border rounded-md bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
                                     <div className="ml-4 flex-grow">
                                         <p className="text-gray-700">Full Address: {address.full_address}</p>
                                         <p className="text-gray-700">Email: {address.email}</p>
                                         <p className="text-gray-700">Contact No: {address.contact_no}</p>
                                     </div>
                                     <div className="relative">
-                                        <button className="text-gray-500 hover:text-gray-700 focus:outline-none hover:bg-gray-200 rounded-md p-2" onClick={() => setDropdownOpenIndex(dropdownOpenIndex === addressIndex ? null : addressIndex)}>
+                                        <button className="text-gray-500 hover:text-gray-700 focus:outline-none hover:bg-gray-200 rounded-md p-2" onClick={() => {
+                                            // Toggle dropdown for the clicked address
+                                            setDropdownOpenId(dropdownOpenId === address.id ? null : address.id);
+                                        }}>
                                             <FaEllipsisV className="h-3 w-3" />
                                         </button>
-                                        <div className={`absolute right-0 mt-2 w-34 bg-gray-100 border rounded-md shadow-lg z-10 ${dropdownOpenIndex === addressIndex ? 'block' : 'hidden'}`}>
+                                        <div className={`absolute right-0 mt-2 w-34 bg-gray-100 border rounded-md shadow-lg z-10 ${dropdownOpenId === address.id ? 'block' : 'hidden'}`}>
                                             <ul className="py-1">
                                                 <li className="px-3 py-1 text-gray-700 hover:bg-gray-200 cursor-pointer flex">
                                                     <button
                                                         className="flex items-center"
                                                         onClick={() => {
-                                                            setDropdownOpenIndex(null);
+                                                            setDropdownOpenId(null); // Close dropdown
                                                             onEditAddress(address.id); // Trigger edit functionality here
                                                         }}
                                                     >
