@@ -92,26 +92,55 @@ const Service_ProvidedPagePreview = ({
       <div className="grid gap-4">
         {services.map((service, index) => (
           <div key={service.id} className="flex p-4 border rounded-md bg-white shadow-md dark:bg-gray-dark dark:shadow-card hover:shadow-lg transition-shadow duration-300">
-            <div className="flex-shrink-0">
+
+            <div className="ml-4 flex-grow mr-10">
+              <h2 className="text-xl font-bold" dangerouslySetInnerHTML={sanitizeHTML(service.title)}></h2>
+              <p className="text-gray-700" dangerouslySetInnerHTML={sanitizeHTML(service.content)}></p>
+              <div>
               {service.bg_image ? (
                 <Image
                   src={service.bg_image}
                   alt={service.title}
-                  width={150}
-                  height={100}
-                  style={{ width: "150px", height: "100px" }} // Maintain aspect ratio
-                  className="rounded-md"
+                  width={300}
+                  height={200}
+                  style={{ width: "300px", height: "200px" }} // Maintain aspect ratio
+                  className="rounded-md mt-4"
                 />
               ) : (
-                <div className="w-[150px] h-[100px] bg-gray-200 rounded-md flex items-center justify-center">
+                <div className="w-[300px] h-[200px] bg-gray-200 rounded-md flex items-center justify-center">
                   <span className="text-gray-400">No Image</span>
                 </div>
               )}
+
+              </div>
+              <p className="text-gray-500 font-bold text-3xl mt-6" dangerouslySetInnerHTML={sanitizeHTML(service.heading)}></p>
+              <p className="text-gray-700  mt-2"  dangerouslySetInnerHTML={sanitizeHTML(service.heading_content)}></p>
+              <p className="text-gray-500 font-bold text-xl mt-2" dangerouslySetInnerHTML={sanitizeHTML(service.significance_title)}></p>
+              <p className="text-gray-700  mt-2" dangerouslySetInnerHTML={sanitizeHTML(service.significance)}></p>
+
+              <div>
+              {service.why_content_image ? (
+                <Image
+                  src={service.why_content_image}
+                  alt={service.why_content_title}
+                  width={300}
+                  height={200}
+                  style={{ width: "300px", height: "200px" }} // Maintain aspect ratio
+                  className="rounded-md mt-4"
+                />
+              ) : (
+                <div className="w-[300px] h-[200px] bg-gray-200 rounded-md flex items-center justify-center">
+                  <span className="text-gray-400">No Image</span>
+                </div>
+              )}
+              </div>
+              <p className="text-gray-500 font-bold text-xl mt-2" dangerouslySetInnerHTML={sanitizeHTML(service.plan_of_action_title)}></p>
+              <p className="text-gray-700  mt-2" dangerouslySetInnerHTML={sanitizeHTML(service.plan_of_action)}></p>
+            
             </div>
-            <div className="ml-4 flex-grow">
-              <h2 className="text-xl font-bold" dangerouslySetInnerHTML={sanitizeHTML(service.title)}></h2>
-              <p className="text-gray-700" dangerouslySetInnerHTML={sanitizeHTML(service.content)}></p>
-            </div>
+
+           
+
             <div className="relative">
               <button className="text-gray-500 hover:text-gray-700 focus:outline-none hover:bg-gray-200 rounded-md p-2" onClick={() => setDropdownOpenIndex(dropdownOpenIndex === index ? null : index)}>
                 <FaEllipsisV className="h-3 w-3" />

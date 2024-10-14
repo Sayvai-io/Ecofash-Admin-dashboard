@@ -90,7 +90,7 @@ const menuGroups = [
         children: [
           { label: "Service_Page_Preview", route: "/service" },
           { label: "Service_Provided", route: "/service_provided" },
-          { label: "Seperate_Service_Preview", route: "/seperate_service" },
+          // { label: "Seperate_Service_Preview", route: "/seperate_service" },
         ],
       },
 
