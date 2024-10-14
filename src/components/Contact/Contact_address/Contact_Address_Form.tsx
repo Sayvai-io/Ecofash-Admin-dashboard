@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import supabase from "@/utils/supabaseClient"; // Ensure you have the supabase client set up
 
+import DOMPurify from 'dompurify';
+
 const Country_Address_Form = ({ onSubmitCountry, onSubmitAddress, onBack }: { onSubmitCountry: (data: any) => void; onSubmitAddress: (data: any) => void; onBack: () => void; }) => {
     const [countryName, setCountryName] = useState("");
     const [newCountryName, setNewCountryName] = useState(""); // State for new country input
@@ -97,6 +99,13 @@ const Country_Address_Form = ({ onSubmitCountry, onSubmitAddress, onBack }: { on
         onBack(); // Call the onBack prop
     };
 
+    const sanitizeHTML = (html: string) => {
+        return {
+            __html: DOMPurify.sanitize(html)
+        };
+    };
+  
+
     return (
         <div className="bg-white border rounded-lg shadow-lg p-6">
             <div className="flex items-center gap-8 border-b pt-4 pb-4 mb-4">
@@ -119,7 +128,7 @@ const Country_Address_Form = ({ onSubmitCountry, onSubmitAddress, onBack }: { on
                         >
                             <option value="">Select a country</option>
                             {countries.map(country => (
-                                <option key={country.id} value={country.id}>{country.country_name}</option>
+                                <option key={country.id} value={country.id} dangerouslySetInnerHTML={sanitizeHTML(country.country_name)}></option>
                             ))}
                         </select>
                     </div>
