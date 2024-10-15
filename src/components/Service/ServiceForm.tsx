@@ -16,6 +16,8 @@ const ServiceForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => { // Ac
         collection_heading: "",
         collection_content: "",
         collection_image: "",
+        collection_image1: "",
+        collection_image2: "",
         service_provided_heading: ""
     });
 
@@ -180,6 +182,28 @@ const ServiceForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => { // Ac
                     name="collection_image"
                     id="collection_image"
                     value={formData.collection_image}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                />
+            </div>
+            <div className="mb-4">
+                <label className="block mb-1" htmlFor="collection_image1">Collection Image URL</label>
+                <input
+                    type="text"
+                    name="collection_image1"
+                    id="collection_image1"
+                    value={formData.collection_image1}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                />
+            </div>
+            <div className="mb-4">
+                <label className="block mb-1" htmlFor="collection_image">Collection Image URL</label>
+                <input
+                    type="text"
+                    name="collection_image2"
+                    id="collection_image2"
+                    value={formData.collection_image2}
                     onChange={handleChange}
                     className="w-full p-2 border rounded"
                 />

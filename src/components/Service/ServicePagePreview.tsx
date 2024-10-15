@@ -71,19 +71,40 @@ const ServicePagePreview = ({
                             <p className="text-gray-700 mb-1" dangerouslySetInnerHTML={sanitizeHTML(service.services_provided_title)}></p> {/* Services provided title */}
                             <p className="text-gray-700 font-semibold text-xl mb-2">{service.services_provided}</p> {/* Services provided */}
                             <p className="text-gray-700 mb-1" dangerouslySetInnerHTML={sanitizeHTML(service.business_portfolios_title)}></p> {/* Business portfolios title */}
-                            <p className="text-gray-700 font-semibold text-xl mb-2">{service.business_portfolios}</p> {/* Business portfolios */}
-                            <p className="text-gray-700 mb-1" dangerouslySetInnerHTML={sanitizeHTML(service.collection_heading)}></p> {/* Collection heading */}
-                            <p className="text-gray-700 font-semibold text-xl mb-2" dangerouslySetInnerHTML={sanitizeHTML(service.collection_content)}></p> {/* Collection content */}
+                            <p className="text-gray-700 font-semibold text-xl mb-4">{service.business_portfolios}</p> {/* Business portfolios */}
+                            <p className="text-gray-700 font-semibold text-2xl mb-10" dangerouslySetInnerHTML={sanitizeHTML(service.service_provided_heading)}></p> {/* Collection content */}
+                            <p className="text-gray-700 font-semibold text-xl mb-2" dangerouslySetInnerHTML={sanitizeHTML(service.collection_heading)}></p> {/* Collection heading */}
+                            <p className="text-gray-700  mb-2" dangerouslySetInnerHTML={sanitizeHTML(service.collection_content)}></p> {/* Collection content */}
+                            <div className="flex flex-wrap space-x-4 mt-10">
                             {service.collection_image && ( // Display Collection image if it exists
                                 <Image 
                                     src={service.collection_image} 
                                     alt="Collection Image" 
-                                    width={300}  
+                                    width={200}  
                                     height={200} 
                                     className="rounded-md mb-4" 
                                 />
                             )}
-                            <p className="text-gray-700 font-semibold text-xl mb-2" dangerouslySetInnerHTML={sanitizeHTML(service.service_provided_heading)}></p> {/* Collection content */}
+                            {service.collection_image1 && ( // Display Collection image if it exists
+                                <Image 
+                                    src={service.collection_image1} 
+                                    alt="Collection Image1" 
+                                    width={200}  
+                                    height={200} 
+                                    className="rounded-md mb-4" 
+                                />
+                            )}
+                            {service.collection_image2 && ( // Display Collection image if it exists
+                                <Image 
+                                    src={service.collection_image2} 
+                                    alt="Collection Image2" 
+                                    width={200}  
+                                    height={200} 
+                                    className="rounded-md mb-4" 
+                                />
+                            )}
+                            </div>
+                           
                         </div>
 
                         {/* Dropdown Button */}

@@ -37,6 +37,9 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
     about_image: false,
     contact_image: false,
     services_image: false,
+    service_image1: false,
+    service_image2: false,
+    service_image3: false,
   });
 
   const fileInputRefs = {
@@ -45,6 +48,9 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
     about_image: useRef<HTMLInputElement>(null), // Updated field name
     contact_image: useRef<HTMLInputElement>(null), // Updated field name
     services_image: useRef<HTMLInputElement>(null), // Updated field name
+    service_image1: useRef<HTMLInputElement>(null), // Updated field name
+    service_image2: useRef<HTMLInputElement>(null), // Updated field name
+    service_image3: useRef<HTMLInputElement>(null), // Updated field name
   };
 
   useEffect(() => {
@@ -68,6 +74,9 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
           about_image: data[0].about_image, // Updated field name
           contact_image: data[0].contact_image, // Updated field name
           services_image: data[0].services_image, // Updated field name
+          service_image1: data[0].service_image1, // Updated field name
+          service_image2: data[0].service_image2, // Updated field name
+          service_image3: data[0].service_image3, // Updated field name
         });
       }
     };
@@ -121,6 +130,9 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
       "about_image",
       "contact_image",
       "services_image",
+      "service_image1",
+      "service_image2",
+      "service_image3",
     ]) {
       // Updated fields
       const file = images[field]; // Assign to a variable for clarity
@@ -137,7 +149,7 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
 
         const { data: publicData } = supabase.storage
           .from("blog-images") // Updated storage name
-          .getPublicUrl(data.path);
+          .getPublicUrl(data.path); 
         const publicURL = publicData.publicUrl;
 
         updatedHome[field] = publicURL; // Update the URL in the updatedHome object
@@ -154,7 +166,7 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
     } else {
       setHomeData((prevData: any) =>
         prevData.map((home: any) =>
-          home.id === editHome.id ? updatedHome : home,
+          home.id === editHome.id ? updatedHome : home, 
         ),
       ); // Update local state
       setIsEditHome(false); // Close the edit form
@@ -433,12 +445,13 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
             <label className="mb-2 block font-semibold text-gray-500">
               Services Image
             </label>
+            
             {imagePreviews.services_image ? ( // Check if the about image preview exists
-              <div className="mb-2">
+              <div className="mb-6">
                 <Image
                   src={imagePreviews.services_image}
                   alt="Services Image"
-                  width={300}
+                  width={200}
                   height={200}
                   className="mb-4 rounded-md"
                 />
@@ -481,6 +494,154 @@ const EditHomePage = ({ setIsEditHome, setHomeData }: HomePagePreviewProps) => {
               ref={fileInputRefs.services_image}
               className="hidden"
             />
+
+  {imagePreviews.service_image1 ? ( // Check if the about image preview exists
+              <div className="mb-6">
+                <Image
+                  src={imagePreviews.service_image1}
+                  alt="Service Image 1"
+                  width={200}
+                  height={200}
+                  className="mb-4 rounded-md"
+                />
+                <div className="mt-2 flex gap-2">
+                  {" "}
+                  {/* Flex container for icons */}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage("service_image1")}
+                    className="flex items-center rounded bg-red-500 px-2 py-1 text-white"
+                  >
+                    Replace Image {/* Trash icon without margin */}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              // No image box
+              <div
+                className={`mb-2 flex h-[200px] w-[300px] cursor-pointer items-center justify-center rounded-md bg-gray-200 ${imageUploadActive.services_image ? "" : "cursor-not-allowed opacity-50"}`}
+                onClick={() =>
+                  imageUploadActive.service_image1 &&
+                  fileInputRefs.service_image1.current?.click()
+                } // Clickable area
+              >
+                <span className="text-gray-700">Upload Image</span>
+                <button
+                  type="button"
+                  className="ml-2 flex items-center rounded px-3 py-2 text-gray-700" // Added margin-left for spacing
+                  disabled={!imageUploadActive.services_image}
+                >
+                  <FontAwesomeIcon icon={faFileUpload} />{" "}
+                  {/* File upload icon without margin */}
+                </button>
+              </div>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageChange(e, "service_image1")}
+              ref={fileInputRefs.service_image1}
+              className="hidden"
+            />
+
+{imagePreviews.service_image2 ? ( // Check if the about image preview exists
+              <div className="mb-6">
+                <Image
+                  src={imagePreviews.service_image2}
+                  alt="Service Image 2"
+                  width={200}
+                  height={200}
+                  className="mb-4 rounded-md"
+                />
+                <div className="mt-2 flex gap-2">
+                  {" "}
+                  {/* Flex container for icons */}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage("service_image2")}
+                    className="flex items-center rounded bg-red-500 px-2 py-1 text-white"
+                  >
+                    Replace Image {/* Trash icon without margin */}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              // No image box
+              <div
+                className={`mb-2 flex h-[200px] w-[300px] cursor-pointer items-center justify-center rounded-md bg-gray-200 ${imageUploadActive.services_image ? "" : "cursor-not-allowed opacity-50"}`}
+                onClick={() =>
+                  imageUploadActive.service_image2 &&
+                  fileInputRefs.service_image2.current?.click()
+                } // Clickable area
+              >
+                <span className="text-gray-700">Upload Image</span>
+                <button
+                  type="button"
+                  className="ml-2 flex items-center rounded px-3 py-2 text-gray-700" // Added margin-left for spacing
+                  disabled={!imageUploadActive.services_image}
+                >
+                  <FontAwesomeIcon icon={faFileUpload} />{" "}
+                  {/* File upload icon without margin */}
+                </button>
+              </div>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageChange(e, "service_image2")}
+              ref={fileInputRefs.service_image2}
+              className="hidden"
+            />
+
+{imagePreviews.service_image3 ? ( // Check if the about image preview exists
+              <div className="mb-6">  
+                <Image
+                  src={imagePreviews.service_image3}
+                  alt="Service Image 3"
+                  width={200}
+                  height={200}
+                  className="mb-4 rounded-md"
+                />
+                <div className="mt-2 flex gap-2">
+                  {" "}
+                  {/* Flex container for icons */}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage("service_image3")}
+                    className="flex items-center rounded bg-red-500 px-2 py-1 text-white"
+                  >
+                    Replace Image {/* Trash icon without margin */}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              // No image box
+              <div
+                className={`mb-2 flex h-[200px] w-[300px] cursor-pointer items-center justify-center rounded-md bg-gray-200 ${imageUploadActive.services_image ? "" : "cursor-not-allowed opacity-50"}`}
+                onClick={() =>
+                  imageUploadActive.service_image3 &&
+                  fileInputRefs.service_image3.current?.click()
+                } // Clickable area
+              >
+                <span className="text-gray-700">Upload Image</span>
+                <button
+                  type="button"
+                  className="ml-2 flex items-center rounded px-3 py-2 text-gray-700" // Added margin-left for spacing
+                  disabled={!imageUploadActive.service_image3}
+                >
+                  <FontAwesomeIcon icon={faFileUpload} />{" "}
+                  {/* File upload icon without margin */}
+                </button>
+              </div>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageChange(e, "service_image3")}
+              ref={fileInputRefs.service_image3}
+              className="hidden"  
+            />
+
           </div>
           <div className="mb-4">
             {/* Contact Heading Input */}
