@@ -33,6 +33,8 @@ const EditServicePage = ({
   const fileInputRefs = {
     service_image: useRef<HTMLInputElement>(null),
     collection_image: useRef<HTMLInputElement>(null),
+    collection_image1: useRef<HTMLInputElement>(null),
+    collection_image2: useRef<HTMLInputElement>(null),
   };
 
   useEffect(() => {
@@ -52,6 +54,8 @@ const EditServicePage = ({
         setImagePreviews({
           service_image: data[0].service_image,
           collection_image: data[0].collection_image,
+          collection_image1: data[0].collection_image1,
+          collection_image2: data[0].collection_image2,
         });
       }
     };
@@ -88,7 +92,7 @@ const EditServicePage = ({
   const handleUpdateService = async () => {
     let updatedService = { ...editService };
 
-    for (const field of ['service_image', 'collection_image']) {
+    for (const field of ['service_image', 'collection_image', 'collection_image1', 'collection_image2']) {
       const file = images[field];
       if (file) {
         const uniqueFileName = `${Date.now()}_${file.name}`;
@@ -360,6 +364,73 @@ const EditServicePage = ({
               ref={fileInputRefs.collection_image} 
               className="hidden" 
             />
+
+  {imagePreviews.collection_image1 ? (
+              <div className="mb-2">
+                <Image 
+                  src={imagePreviews.collection_image1} 
+                  alt="Collection Image" 
+                  width={300} 
+                  height={200} 
+                  className="rounded-md mb-4" 
+                />
+                <button 
+                  type="button" 
+                  onClick={() => handleRemoveImage('collection_image1')} 
+                  className="flex items-center px-2 py-1 bg-red-500 text-white rounded"
+                >
+                  Replace Image
+                </button>
+              </div>
+            ) : (
+              <div 
+                className={`w-[300px] h-[200px] bg-gray-200 rounded-md flex items-center justify-center mb-2 cursor-pointer`} 
+                onClick={() => fileInputRefs.collection_image1.current?.click()}
+              >
+                <span className="text-gray-700">Upload Image</span>
+              </div>
+            )}
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={(e) => handleImageChange(e, 'collection_image1')} 
+              ref={fileInputRefs.collection_image1} 
+              className="hidden" 
+            />
+
+{imagePreviews.collection_image2 ? (
+              <div className="mb-2">
+                <Image 
+                  src={imagePreviews.collection_image2} 
+                  alt="Collection Image" 
+                  width={300} 
+                  height={200} 
+                  className="rounded-md mb-4" 
+                />
+                <button 
+                  type="button" 
+                  onClick={() => handleRemoveImage('collection_image2')} 
+                  className="flex items-center px-2 py-1 bg-red-500 text-white rounded"
+                >
+                  Replace Image
+                </button>
+              </div>
+            ) : (
+              <div 
+                className={`w-[300px] h-[200px] bg-gray-200 rounded-md flex items-center justify-center mb-2 cursor-pointer`} 
+                onClick={() => fileInputRefs.collection_image2.current?.click()}
+              >
+                <span className="text-gray-700">Upload Image</span>
+              </div>
+            )}
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={(e) => handleImageChange(e, 'collection_image2')} 
+              ref={fileInputRefs.collection_image2} 
+              className="hidden" 
+            />
+
           </div>
 
           {/* Service Provided Heading Input */}

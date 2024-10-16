@@ -73,27 +73,61 @@ const HomePagePreview = ({
                                     className="rounded-md mb-10" 
                                 />
                             )}
-                            <p className="text-gray-700 text-lg mb-1" dangerouslySetInnerHTML={sanitizeHTML(home.about_title)}></p> {/* About title */}
-                            <p className="text-gray-700 font-semibold text-xl mb-2" dangerouslySetInnerHTML={sanitizeHTML(home.about_heading)}></p> {/* About heading */}
-                            <p className="text-gray-700 mr-50 mb-4"  dangerouslySetInnerHTML={sanitizeHTML(home.about_content)}></p> {/* About content */}
-                            {home.about_image && ( // Display About image if it exists
-                                <Image 
-                                    src={home.about_image} 
-                                    alt="About Image" 
-                                    width={300}  
-                                    height={200} 
-                                    className="rounded-md mb-4" 
-                                />
-                            )}
-                            {home.services_image && ( // Display Ser   vices image if it exists
-                                <Image 
-                                    src={home.services_image} 
-                                    alt="Services Image" 
-                                    width={300}  
-                                    height={200} 
-                                    className="rounded-md mb-10" 
-                                />
-                            )}
+                            <div className="flex flex-col md:flex-row items-start"> {/* Flex container for layout */}
+                               {home.about_image && ( // Display About image if it exists
+                                    <Image 
+                                        src={home.about_image} 
+                                        alt="About Image" 
+                                        width={300}  
+                                        height={200} 
+                                        className="rounded-md mb-4 " // Add margin for spacing on larger screens
+                                    />
+                                )}
+                                <div className="flex-1 md:ml-10"> {/* Flex item for text */}
+                                    <p className="text-gray-700 text-lg mb-1" dangerouslySetInnerHTML={sanitizeHTML(home.about_title)}></p> {/* About title */}
+                                    <p className="text-gray-700 font-semibold text-xl mb-2" dangerouslySetInnerHTML={sanitizeHTML(home.about_heading)}></p> {/* About heading */}
+                                    <p className="text-gray-700 mb-4" dangerouslySetInnerHTML={sanitizeHTML(home.about_content)}></p> {/* About content */}
+                                </div>
+                                
+                            </div>
+                            <div className="flex flex-wrap justify-center space-x-4 mt-10"> {/* Flex container for responsive layout */}
+                                {home.services_image && ( // Display Ser   vices image if it exists
+                                    <Image 
+                                        src={home.services_image} 
+                                        alt="Services Image" 
+                                        width={150}  
+                                        height={150} 
+                                        className="rounded-md mb-10" 
+                                    />
+                                )}
+                                {home.service_image1 && ( // Display Ser   vices image if it exists
+                                    <Image 
+                                        src={home.service_image1} 
+                                        alt="Services Image" 
+                                        width={150}      
+                                        height={150} 
+                                        className="rounded-md mb-10" 
+                                    />
+                                )}
+                                {home.service_image2 && ( // Display Ser   vices image if it exists
+                                    <Image 
+                                        src={home.service_image2} 
+                                        alt="Services Image" 
+                                        width={150}  
+                                        height={150} 
+                                        className="rounded-md mb-10" 
+                                    />
+                                )}
+                                {home.service_image3 && ( // Display Ser   vices image if it exists
+                                    <Image 
+                                        src={home.service_image3} 
+                                        alt="Services Image" 
+                                        width={150}  
+                                        height={150} 
+                                        className="rounded-md mb-10" 
+                                    />
+                                )}
+                            </div>
                             <p className="text-gray-700 mb-1" dangerouslySetInnerHTML={sanitizeHTML(home.contact_heading)}></p> {/* Contact heading */}
                             <p className="text-gray-700 font-semibold text-lg mb-2" dangerouslySetInnerHTML={sanitizeHTML(home.contact_content)}></p> {/* Contact content */}
                             {home.contact_image && ( // Display Contact image if it exists
