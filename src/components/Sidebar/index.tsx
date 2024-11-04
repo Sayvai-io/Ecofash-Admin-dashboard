@@ -182,7 +182,7 @@ const menuGroups = [
             />
           </svg>
         ),
-        label: "AI Chatbot",
+        label: "Chatbot Integration",
         route: "/aichatbot",
       },
 
