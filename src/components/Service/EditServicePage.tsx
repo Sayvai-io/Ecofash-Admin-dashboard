@@ -177,7 +177,7 @@ const EditServicePage = ({
           </div>
 
           {/* Service Image Input */}
-          <div className="mb-4">
+          <div className="mb-4 ">
             <label className="block mb-2 text-gray-500 font-semibold">Service Image</label>
             {imagePreviews.service_image ? (
               <div className="mb-2">

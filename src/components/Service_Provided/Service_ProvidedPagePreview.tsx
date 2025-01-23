@@ -94,6 +94,8 @@ const Service_ProvidedPagePreview = ({
           <div key={service.id} className="flex p-4 border rounded-md bg-white shadow-md dark:bg-gray-dark dark:shadow-card hover:shadow-lg transition-shadow duration-300">
 
             <div className="ml-4 flex-grow mr-10">
+            <h3 className="text-xl border-b text-[#609641] font-bold mb-4">Service Card Content</h3>
+
               <h2 className="text-xl font-bold" dangerouslySetInnerHTML={sanitizeHTML(service.title)}></h2>
               <p className="text-gray-700" dangerouslySetInnerHTML={sanitizeHTML(service.content)}></p>
               <div>
@@ -113,6 +115,9 @@ const Service_ProvidedPagePreview = ({
               )}
 
               </div>
+
+              <h3 className="text-xl border-b text-[#609641] font-bold mt-6">Separate Service Page Content</h3>
+
               <p className="text-gray-500 font-bold text-3xl mt-6" dangerouslySetInnerHTML={sanitizeHTML(service.heading)}></p>
               <p className="text-gray-700  mt-2"  dangerouslySetInnerHTML={sanitizeHTML(service.heading_content)}></p>
               <p className="text-gray-500 font-bold text-xl mt-2" dangerouslySetInnerHTML={sanitizeHTML(service.significance_title)}></p>

@@ -10,10 +10,7 @@ const HomeForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => { // Accep
         about_content: "", // Added about_content
         about_image: "", // Added about_image
         service: "", // Added service
-        services_image: "", // Added services_image
-        service_image1: "", // Added service_image1
-        service_image2: "", // Added service_image2
-        service_image3: "", // Added service_image3
+       
         contact_heading: "", // Added contact_heading
         contact_content: "", // Added contact_content
         contact_image: "", // Added contact_image
@@ -112,53 +109,7 @@ const HomeForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => { // Accep
                 />
             </div>
            
-            <div className="mb-4">
-                <label className="block mb-1" htmlFor="services_image">Service Image URL</label>
-                <input
-                    type="text"
-                    name="services_image"
-                    id="services_image"
-                    value={formData.services_image}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                />
-            </div>
-
-            <div className="mb-4">
-                <label className="block mb-1" htmlFor="service_image1">Service Image URL</label>
-                <input
-                    type="text"
-                    name="service_image1"
-                    id="service_image1"
-                    value={formData.service_image1}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                />
-            </div>
-
-            <div className="mb-4">
-                <label className="block mb-1" htmlFor="service_image2">Service Image URL</label>
-                <input
-                    type="text"
-                    name="service_image2"    
-                    id="service_image2"
-                    value={formData.service_image2}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                />
-            </div>
-
-            <div className="mb-4">
-                <label className="block mb-1" htmlFor="service_image3">Service Image URL</label>
-                <input
-                    type="text"
-                    name="service_image3"    
-                    id="service_image3"
-                    value={formData.service_image3}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                />
-            </div>
+            
 
             <div className="mb-4">
                 <label className="block mb-1" htmlFor="contact_heading">Contact Heading</label>

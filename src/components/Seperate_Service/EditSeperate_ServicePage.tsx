@@ -165,6 +165,8 @@ const EditSeperate_ServicePage = ({
       {editService && (
         <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }} className="px-20">
           <div className="mb-4">
+         
+
             <label className="block mb-2 text-gray-500 font-semibold">Title</label>
             <input
               type="text"

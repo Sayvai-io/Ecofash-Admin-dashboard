@@ -90,44 +90,7 @@ const HomePagePreview = ({
                                 </div>
                                 
                             </div>
-                            <div className="flex flex-wrap justify-center space-x-4 mt-10"> {/* Flex container for responsive layout */}
-                                {home.services_image && ( // Display Ser   vices image if it exists
-                                    <Image 
-                                        src={home.services_image} 
-                                        alt="Services Image" 
-                                        width={150}  
-                                        height={150} 
-                                        className="rounded-md mb-10" 
-                                    />
-                                )}
-                                {home.service_image1 && ( // Display Ser   vices image if it exists
-                                    <Image 
-                                        src={home.service_image1} 
-                                        alt="Services Image" 
-                                        width={150}      
-                                        height={150} 
-                                        className="rounded-md mb-10" 
-                                    />
-                                )}
-                                {home.service_image2 && ( // Display Ser   vices image if it exists
-                                    <Image 
-                                        src={home.service_image2} 
-                                        alt="Services Image" 
-                                        width={150}  
-                                        height={150} 
-                                        className="rounded-md mb-10" 
-                                    />
-                                )}
-                                {home.service_image3 && ( // Display Ser   vices image if it exists
-                                    <Image 
-                                        src={home.service_image3} 
-                                        alt="Services Image" 
-                                        width={150}  
-                                        height={150} 
-                                        className="rounded-md mb-10" 
-                                    />
-                                )}
-                            </div>
+                            
                             <p className="text-gray-700 mb-1" dangerouslySetInnerHTML={sanitizeHTML(home.contact_heading)}></p> {/* Contact heading */}
                             <p className="text-gray-700 font-semibold text-lg mb-2" dangerouslySetInnerHTML={sanitizeHTML(home.contact_content)}></p> {/* Contact content */}
                             {home.contact_image && ( // Display Contact image if it exists
