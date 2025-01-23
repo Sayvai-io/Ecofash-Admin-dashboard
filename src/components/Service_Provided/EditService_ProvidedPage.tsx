@@ -183,8 +183,10 @@ const EditService_ProvidedPage = ({
        </button>
        <h1 className="text-black text-2xl font-bold mb-2">Edit Service Provided</h1> {/* Updated heading */}
       </div>
+      
       {editService && (
         <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }} className="px-20">
+           <h3 className="text-xl text-[#609641] font-bold mb-4">Service Card Content</h3>
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Title</label>
             <ReactQuill
@@ -247,6 +249,9 @@ const EditService_ProvidedPage = ({
               className="hidden" 
             />
           </div>
+
+          <h3 className="text-xl border-t text-[#609641] font-bold mb-4">Separate Service Page Content</h3>
+
           <div className="mb-4">
             <label className="block mb-2 text-gray-500 font-semibold">Heading</label>
             <ReactQuill
